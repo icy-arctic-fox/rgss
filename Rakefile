@@ -1,6 +1,7 @@
 require 'rubygems'
 require 'rubygems/package_task'
 require 'bundler/gem_tasks'
+require 'rspec/core/rake_task'
 require 'yard'
 
 task :default => :build
@@ -9,6 +10,10 @@ task :default => :build
 gem_file = File.expand_path('../rpg-maker-rgss3.gemspec', __FILE__)
 gemspec  = Gem::Specification::load(gem_file)
 Gem::PackageTask.new(gemspec)
+
+# :spec - Task to run unit tests.
+RSpec::Core::RakeTask.new(:spec)
+task :test => :spec
 
 # :doc - Task to create documentation.
 YARD::Rake::YardocTask.new do |t|
