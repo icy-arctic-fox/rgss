@@ -18,6 +18,8 @@ Credit goes to Enterbrain for the original architecture (structure) of the RGSS 
   spec.test_files    = spec.files.grep(%r{^(test|spec|features)/})
   spec.require_paths = ['lib']
 
+  spec.add_dependency 'yard'
+
   spec.add_development_dependency 'bundler', '~> 1.7'
   spec.add_development_dependency 'rake', '~> 10.0'
 end
