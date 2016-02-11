@@ -16,5 +16,10 @@ include_directories(../../include/binding)
 add_executable(Game ${SRC_FILES})
 target_link_libraries(Game rgss rgss_rpg "${RUBY_LIBRARY}")
 
+# Look for shared libraries in current directory.
+set_target_properties(Game PROPERTIES INSTALL_RPATH .)
 install(TARGETS Game DESTINATION .)
-install(FILES "${RUBY_LIBRARY}" DESTINATION .)
+
+# Install the Ruby library along-side the game.
+file(GLOB RUBY_LIBS "${RUBY_LIBRARY}.*")
+install(FILES ${RUBY_LIBS} DESTINATION .)
