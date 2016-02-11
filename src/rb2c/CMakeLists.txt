@@ -11,4 +11,7 @@ function(ADD_RUBY_SCRIPT RB_FILE)
             COMMAND "${CMAKE_COMMAND}" -E make_directory "${C_OUTPUT_DIR}"
             COMMAND "$<TARGET_FILE:rb2c>" "${RB_FILE_PATH}" "${C_FILE}" ${SYMBOL}
             DEPENDS rb2c "${RB_FILE}")
+    if(ARGV1)
+        set(${ARGV1} ${SYMBOL} PARENT_SCOPE)
+    endif()
 endfunction()
