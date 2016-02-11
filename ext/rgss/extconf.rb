@@ -7,7 +7,6 @@ EXTENSION = 'rgss'
 PWD       = Dir.pwd
 CWD       = File.expand_path(File.dirname(__FILE__))
 RGSS_DIR  = File.join(CWD, '..', '..')
-LIB_DIR   = File.join(RGSS_DIR, 'lib', EXTENSION)
 BUILD_DIR = 'build'
 
 def sys(command, *args)
@@ -56,11 +55,8 @@ Dir.chdir(RGSS_DIR) do
       # and change .dll to .so on Windows.
       dest_file  = file.sub('lib', '').sub('.dll', '.so')
       build_dest = File.join(PWD, dest_file)
-      lib_dest   = File.join(LIB_DIR, dest_file)
       puts "cp #{file} #{build_dest}"
       FileUtils.copy(file, build_dest)
-      puts "cp #{file} #{lib_dest}"
-      FileUtils.copy(file, lib_dest)
     end
   end
 end
