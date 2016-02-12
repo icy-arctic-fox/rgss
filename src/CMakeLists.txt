@@ -19,9 +19,11 @@ if(STATIC_SFML_LIB)
     add_definitions(-DSFML_STATIC -DGLEW_STATIC)
 endif()
 
-if(UNIX)
+if(CMAKE_COMPILER_IS_GNUCC OR CMAKE_COMPILER_IS_GNUCXX)
     # Make symbols in SFML libraries position independent, required on Linux.
     set(SFML_CMAKE_ARGS ${SFML_CMAKE_ARGS} "-DCMAKE_C_FLAGS=-fPIC" "-DCMAKE_CXX_FLAGS=-fPIC")
+    set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -fPIC")
+    set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -fPIC")
 endif()
 
 # Include SFML as an external project.
