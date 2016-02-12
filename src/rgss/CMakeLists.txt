@@ -5,6 +5,7 @@ include_directories(../../include/rgss)
 set(SRC_FILES
         Color.cpp
         Rect.cpp
+        Table.cpp
         Tone.cpp
         )
 
