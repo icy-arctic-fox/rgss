@@ -39,7 +39,19 @@ namespace RGSS
 
     void Table::resize (int w, int h, int d)
     {
-        // TODO
+        int newSize = _whdToSize(w, h, d);
+        int minW = w < _w ? w : _w;
+        int minH = h < _h ? h : _h;
+        int minD = d < _d ? d : _d;
+        sf::Int16 *newData = new sf::Int16[newSize];
+
+        sf::Int16 *source = _data, *dest = newData;
+        for(int z = 0; z < minD; ++z)
+            for(int y = 0; y < minH; ++y, source += _w, dest += w)
+                memcpy(source, dest, minW);
+
+        delete _data;
+        _data = newData;
     }
 
     Table *Table::clone () const
