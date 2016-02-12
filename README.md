@@ -19,9 +19,12 @@ The following is a description of the directory structure used for this project.
 
 - `ext/` - Ruby native extension for RGSS. The actual code for RGSS is not here. Describes how to build RGSS with CMake.
 - `include/` - Header files for C++ implementation of the RGSS engine.
+  - `binding/` - Header files specific to the binding. These are needed to include the binding in C/C++ code.
+  - `rgss/` - Header files for the implementation of RGSS.
 - `lib/` - Ruby scripts. This includes everything in the RPG module and method stubs for the RGSS modules and classes.
   - `rpg/` - RPG module. Contains the classes provided by RPG Maker VX. RGSS doesn't depend on these.
 - `spec/` - Test scripts. RSpec is used to test the functionality.
+  - `unit/` - Unit tests for the RGSS implementation.
 - `src/` - C/C++ code. Native extension code for the gem and Game executable.
   - `rgss/` - C++ implementation of the RGSS engine.
   - `binding/` - C binding. Ties the ruby methods to the C++ implementation.
