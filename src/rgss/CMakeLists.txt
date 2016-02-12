@@ -36,3 +36,14 @@ ExternalProject_Add(sfml
 set(SFML_INCLUDE_DIR "${SFML_INSTALL_DIR}/include")
 set(SFML_LIB_DIR     "${SFML_INSTALL_DIR}/lib")
 include_directories("${SFML_INCLUDE_DIR}")
+
+# The following is for the RGSS implementation library.
+
+include_directories(../../include/rgss)
+
+set(SRC_FILES
+        Color.cpp
+        )
+
+add_library(rgss_impl STATIC ${SRC_FILES})
+add_dependencies(rgss_impl sfml)
