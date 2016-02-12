@@ -8,10 +8,10 @@ namespace RGSS
 {
     class Rect
     {
-        private:
+    private:
         sf::IntRect _bounds;
 
-        public:
+    public:
         Rect () {}
         Rect (int x, int y, int width, int height);
         const int getX () const;

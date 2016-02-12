@@ -8,11 +8,11 @@ namespace RGSS
 {
     class Color
     {
-        private:
+    private:
         sf::Color _internal;
         double _red, _green, _blue, _alpha;
 
-        public:
+    public:
         Color ();
         Color (double red, double green, double blue, double alpha);
         const double getRed () const;

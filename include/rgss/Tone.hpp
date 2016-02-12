@@ -7,10 +7,10 @@ namespace RGSS
 {
     class Tone
     {
-        private:
+    private:
         double _red, _green, _blue, _gray;
 
-        public:
+    public:
         Tone ();
         Tone (double red, double green, double blue, double gray);
         const double getRed () const;
