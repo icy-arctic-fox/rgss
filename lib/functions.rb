@@ -18,6 +18,7 @@ def save_data(obj, filename)
   File.open(filename, 'wb') do |f |
     Marshal.dump(obj, f)
   end
+  nil
 end
 
 def msgbox(arg, *args)
