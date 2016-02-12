@@ -9,7 +9,7 @@ namespace RGSS
         return x + (y * _w + (z * _w * _h));
     }
 
-    static int _whdToSize (int w, int h, int d)
+    int Table::_whdToSize (int w, int h, int d)
     {
         // TODO: Throw exception for invalid dimensions.
         int size = w * h * d;
