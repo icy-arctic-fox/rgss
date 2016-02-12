@@ -25,6 +25,21 @@ namespace RGSS
         _data = new sf::Int16[size];
     }
 
+    int Table::getWidth () const
+    {
+        return _w;
+    }
+
+    int Table::getHeight () const
+    {
+        return _h;
+    }
+
+    int Table::getDepth () const
+    {
+        return _d;
+    }
+
     sf::Int16 Table::get (int x, int y, int z) const
     {
         int index = _xyzToIndex(x, y, z);

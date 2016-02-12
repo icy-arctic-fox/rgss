@@ -16,6 +16,9 @@ namespace RGSS
 
     public:
         Table (int w, int h, int d);
+        int getWidth () const;
+        int getHeight () const;
+        int getDepth () const;
         sf::Int16 get (int x, int y, int z) const;
         void set (int x, int y, int z, sf::Int16 value);
         void resize (int w, int h, int d);
