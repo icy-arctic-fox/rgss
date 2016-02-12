@@ -5,6 +5,7 @@ include_directories(../../include/rgss)
 set(SRC_FILES
         Color.cpp
         Rect.cpp
+        Tone.cpp
         )
 
 add_library(rgss_impl STATIC ${SRC_FILES})
