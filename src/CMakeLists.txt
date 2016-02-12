@@ -20,10 +20,12 @@ if(STATIC_SFML_LIB)
 endif()
 
 if(CMAKE_COMPILER_IS_GNUCC OR CMAKE_COMPILER_IS_GNUCXX)
-    # Make symbols in SFML libraries position independent, required on Linux.
-    set(SFML_CMAKE_ARGS ${SFML_CMAKE_ARGS} "-DCMAKE_C_FLAGS=-fPIC" "-DCMAKE_CXX_FLAGS=-fPIC")
-    set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -fPIC")
-    set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -fPIC")
+    if(UNIX)
+        # Make symbols in SFML libraries position independent, required on Linux.
+        set(SFML_CMAKE_ARGS ${SFML_CMAKE_ARGS} "-DCMAKE_C_FLAGS=-fPIC" "-DCMAKE_CXX_FLAGS=-fPIC")
+        set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -fPIC")
+        set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -fPIC")
+    endif()
 endif()
 
 # Include SFML as an external project.
