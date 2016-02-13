@@ -73,6 +73,10 @@ namespace RGSS
             for(int y = 0; y < minH; ++y, source += _w, dest += w)
                 memcpy(source, dest, minW);
 
+        _w = w;
+        _h = h;
+        _d = d;
+
         if(_data)
             delete _data;
         _data = newData;
