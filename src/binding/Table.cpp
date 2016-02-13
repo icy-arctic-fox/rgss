@@ -44,13 +44,12 @@ VALUE tableClass_resize (int argc, VALUE *argv, VALUE self)
         }
     }
 
-    return Qnil;
+    return self;
 }
 
 VALUE tableClass_init (int argc, VALUE *argv, VALUE self)
 {
-    tableClass_resize(argc, argv, self);
-    return self;
+    return tableClass_resize(argc, argv, self);
 }
 
 VALUE tableClass_getXSize (VALUE self)
