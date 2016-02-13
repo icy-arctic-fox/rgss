@@ -125,8 +125,47 @@ VALUE tableClass_getElement (int argc, VALUE *argv, VALUE self)
 
 VALUE tableClass_setElement (int argc, VALUE *argv, VALUE self)
 {
-    // TODO
-    return Qnil;
+    VALUE xValue, arg2, arg3, arg4;
+    int x, y, z;
+    sf::Int16 value;
+
+    int count = rb_scan_args(argc, argv, "22", &xValue, &arg2, &arg3, &arg4);
+    if(count >= 1 && count <= 4)
+    {
+        RGSS::Table *table;
+        Data_Get_Struct(self, RGSS::Table, table);
+
+        if(count - 1 != table->getDimensions())
+            rb_raise(rb_eArgError, "Dimension mismatch");
+
+        x = NUM2INT(xValue);
+        switch(count)
+        {
+            case 2:
+                value = NUM2INT(arg2);
+                if(x >= 0 && x < table->getWidth())
+                    table->set(value, x);
+                return arg2;
+            case 3:
+                value = NUM2INT(arg3);
+                y = NUM2INT(arg2);
+                if((x >= 0 && x < table->getWidth())
+                    && (y >= 0 && y < table->getHeight()))
+                    table->set(value, x, y);
+                return arg3;
+            case 4:
+                value = NUM2INT(arg4);
+                y = NUM2INT(arg2);
+                z = NUM2INT(arg3);
+                if((x >= 0 && x < table->getWidth())
+                   && (y >= 0 && y < table->getHeight())
+                   && (z >= 0 && z < table->getDepth()))
+                   table->set(value, x, y);
+                return arg3;
+        }
+    }
+    else
+        return Qnil;
 }
 
 VALUE tableClass_load (VALUE tableClass, VALUE marshaled)
