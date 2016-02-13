@@ -160,7 +160,7 @@ VALUE tableClass_setElement (int argc, VALUE *argv, VALUE self)
                 if((x >= 0 && x < table->getWidth())
                    && (y >= 0 && y < table->getHeight())
                    && (z >= 0 && z < table->getDepth()))
-                   table->set(value, x, y);
+                   table->set(value, x, y, z);
                 return arg3;
         }
     }
