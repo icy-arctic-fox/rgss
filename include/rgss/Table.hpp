@@ -15,6 +15,7 @@ namespace RGSS
         static int _whdToSize (int w, int h, int d);
 
     public:
+        Table ();
         Table (int w, int h, int d);
         int getWidth () const;
         int getHeight () const;

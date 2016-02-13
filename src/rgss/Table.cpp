@@ -16,6 +16,14 @@ namespace RGSS
         return size < 0 ? 1 : size;
     }
 
+    Table::Table ()
+    {
+        _w = 0;
+        _h = 0;
+        _d = 0;
+        _data = NULL;
+    }
+
     Table::Table (int w, int h, int d)
     {
         int size = _whdToSize(w, h, d);
@@ -65,7 +73,8 @@ namespace RGSS
             for(int y = 0; y < minH; ++y, source += _w, dest += w)
                 memcpy(source, dest, minW);
 
-        delete _data;
+        if(_data)
+            delete _data;
         _data = newData;
     }
 
