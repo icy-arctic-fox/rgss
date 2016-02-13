@@ -85,8 +85,11 @@ VALUE tableClass_getElement (int argc, VALUE *argv, VALUE self)
     if(count >= 1 && count <= 3)
     {
         RGSS::Table *table;
-        Data_Get_Struct(self, RGSS::Table, table);
         sf::Int16 value;
+        Data_Get_Struct(self, RGSS::Table, table);
+
+        if(count != table->getDimensions())
+            rb_raise(rb_eArgError, "Dimension mismatch");
 
         x = NUM2INT(xValue);
         if(x < 0 || x >= table->getWidth())
