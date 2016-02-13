@@ -176,8 +176,34 @@ VALUE tableClass_load (VALUE tableClass, VALUE marshaled)
 
 VALUE tableClass_dump (VALUE self, VALUE level)
 {
-    // TODO
-    return Qnil;
+    RGSS::Table *table;
+    Data_Get_Struct(self, RGSS::Table, table);
+    int w = table->getWidth(),
+        h = table->getHeight(),
+        d = table->getDepth(),
+        dimensions = table->getDimensions();
+
+    int size = w * h * d;
+    int dataLength = (5 * sizeof(int)) + (size * sizeof(sf::Int16));
+    char *data = new char[dataLength];
+
+    memset(data, 0, dataLength);
+    memcpy(data, &dimensions, sizeof(int));
+    memcpy(&data[sizeof(int)], &w, sizeof(int));
+    memcpy(&data[sizeof(int) * 2], &h, sizeof(int));
+    memcpy(&data[sizeof(int) * 3], &d, sizeof(int));
+    memcpy(&data[sizeof(int) * 4], &size, sizeof(int));
+
+    char *dataPtr = &data[sizeof(int) * 5];
+    for(int z = 0; z < d; ++z)
+        for(int y = 0; y < h; ++y)
+            for(int x = 0; x < w; ++x, dataPtr += sizeof(sf::Int16))
+            {
+                int value = table->get(x, y, z);
+                memcpy(dataPtr, &value, sizeof(sf::Int16));
+            }
+
+    return rb_str_new(data, dataLength);
 }
 
 void initTableClass ()
