@@ -26,6 +26,7 @@ namespace RGSS
             int minH = h < _h ? h : _h;
             int minD = d < _d ? d : _d;
             sf::Int16 *newData = new sf::Int16[newSize];
+            memset(newData, 0, newSize * sizeof(sf::Int16));
 
             sf::Int16 *source = _data, *dest = newData;
             for(int z = 0; z < minD; ++z)
@@ -62,6 +63,7 @@ namespace RGSS
 
         int size = _whdToSize(_w, _h, _d);
         _data = new sf::Int16[size];
+        memset(_data, 0, size * sizeof(sf::Int16));
     }
 
     Table::Table (int w, int h)
@@ -73,6 +75,7 @@ namespace RGSS
 
         int size = _whdToSize(_w, _h, _d);
         _data = new sf::Int16[size];
+        memset(_data, 0, size * sizeof(sf::Int16));
     }
 
     Table::Table (int w, int h, int d)
@@ -84,6 +87,7 @@ namespace RGSS
 
         int size = _whdToSize(_w, _h, _d);
         _data = new sf::Int16[size];
+        memset(_data, 0, size * sizeof(sf::Int16));
     }
 
     Table::~Table ()
