@@ -79,8 +79,46 @@ VALUE tableClass_getZSize (VALUE self)
 
 VALUE tableClass_getElement (int argc, VALUE *argv, VALUE self)
 {
-    // TODO
-    return Qnil;
+    VALUE xValue, yValue, zValue;
+    int x, y, z;
+
+    int count = rb_scan_args(argc, argv, "12", &xValue, &yValue, &zValue);
+    if(count >= 1 && count <= 3)
+    {
+        RGSS::Table *table;
+        Data_Get_Struct(self, RGSS::Table, table);
+        sf::Int16 value;
+
+        x = NUM2INT(xValue);
+        if(x < 0 || x >= table->getWidth())
+            return Qnil;
+
+        switch(count)
+        {
+            case 1:
+                value = table->get(x);
+                break;
+            case 2:
+                y = NUM2INT(yValue);
+                if(y < 0 || y >= table->getHeight())
+                    return Qnil;
+                value = table->get(x, y);
+                break;
+            case 3:
+                y = NUM2INT(yValue);
+                if(y < 0 || y >= table->getHeight())
+                    return Qnil;
+                z = NUM2INT(zValue);
+                if(z < 0 || z >= table->getDepth())
+                    return Qnil;
+                value = table->get(x, y, z);
+                break;
+        }
+
+        return INT2FIX(value);
+    }
+    else
+        return Qnil;
 }
 
 VALUE tableClass_setElement (int argc, VALUE *argv, VALUE self)
