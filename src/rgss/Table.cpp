@@ -28,10 +28,16 @@ namespace RGSS
             sf::Int16 *newData = new sf::Int16[newSize];
             memset(newData, 0, newSize * sizeof(sf::Int16));
 
-            sf::Int16 *source = _data, *dest = newData;
+            sf::Int16 *source, *dest;
             for(int z = 0; z < minD; ++z)
-                for(int y = 0; y < minH; ++y, source += _w, dest += w)
+                for(int y = 0; y < minH; ++y)
+                {
+                    int sourceIndex = y * _w + (z * _w * _h);
+                    int destIndex   = y * w + (z * w * h);
+                    source = &_data[sourceIndex];
+                    dest   = &newData[destIndex];
                     memcpy(dest, source, minW * sizeof(sf::Int16));
+                }
 
             if(_data)
                 delete _data;
