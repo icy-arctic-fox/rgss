@@ -176,8 +176,40 @@ VALUE tableClass_setElement (int argc, VALUE *argv, VALUE self)
 
 VALUE tableClass_load (VALUE tableClass, VALUE marshaled)
 {
-    // TODO
-    return Qnil;
+    char *data = StringValuePtr(marshaled);
+
+    int dimensions, w, h, d, length;
+    memcpy(&dimensions, &data[0], sizeof(int));
+    memcpy(&w, &data[sizeof(int)], sizeof(int));
+    memcpy(&h, &data[sizeof(int) * 2], sizeof(int));
+    memcpy(&d, &data[sizeof(int) * 3], sizeof(int));
+    memcpy(&length, &data[sizeof(int) * 4], sizeof(int));
+
+    VALUE instance = tableClass_allocate(tableClass);
+    RGSS::Table *table;
+    Data_Get_Struct(instance, RGSS::Table, table);
+
+    switch(dimensions)
+    {
+    case 1:
+        table->resize(w);
+        break;
+    case 2:
+        table->resize(w, h);
+        break;
+    case 3:
+        table->resize(w, h, d);
+        break;
+    }
+
+    // TODO: Optimize by copying the raw, underlying data.
+    sf::Int16 *valuePtr = (sf::Int16 *)&data[sizeof(int) * 5];
+    for(int z = 0; z < d; ++z)
+        for(int y = 0; y < h; ++y)
+            for(int x = 0; x < w && length > 0; ++x, ++valuePtr, --length)
+                table->set(*valuePtr, x, y, z);
+
+    return instance;
 }
 
 VALUE tableClass_dump (VALUE self, VALUE level)
@@ -200,6 +232,7 @@ VALUE tableClass_dump (VALUE self, VALUE level)
     memcpy(&data[sizeof(int) * 3], &d, sizeof(int));
     memcpy(&data[sizeof(int) * 4], &size, sizeof(int));
 
+    // TODO: Optimize by copying the raw, underlying data.
     char *dataPtr = &data[sizeof(int) * 5];
     for(int z = 0; z < d; ++z)
         for(int y = 0; y < h; ++y)
