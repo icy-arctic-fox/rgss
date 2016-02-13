@@ -31,7 +31,7 @@ namespace RGSS
             sf::Int16 *source = _data, *dest = newData;
             for(int z = 0; z < minD; ++z)
                 for(int y = 0; y < minH; ++y, source += _w, dest += w)
-                    memcpy(source, dest, minW);
+                    memcpy(dest, source, minW * sizeof(sf::Int16));
 
             if(_data)
                 delete _data;
