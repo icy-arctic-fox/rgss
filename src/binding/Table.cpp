@@ -15,32 +15,6 @@ VALUE tableClass_allocate (VALUE klass)
     return Data_Make_Struct(klass, RGSS::Table, 0, -1, table);
 }
 
-VALUE tableClass_init (int argc, VALUE *argv, VALUE self)
-{
-    VALUE xValue, yValue, zValue;
-    int w, h, d;
-
-    int count = rb_scan_args(argc, argv, "12", &xValue, &yValue, &zValue);
-    if(count >= 1 && count <= 3)
-    {
-        w = tableClass_fixDimensionValue(xValue);
-        if(count >= 2)
-            h = tableClass_fixDimensionValue(yValue);
-        else
-            h = 1;
-        if(count >= 3)
-            d = tableClass_fixDimensionValue(zValue);
-        else
-            d = 1;
-
-        RGSS::Table *table;
-        Data_Get_Struct(self, RGSS::Table, table);
-        table->resize(w, h, d);
-    }
-
-    return self;
-}
-
 VALUE tableClass_resize (int argc, VALUE *argv, VALUE self)
 {
     VALUE xValue, yValue, zValue;
@@ -49,22 +23,34 @@ VALUE tableClass_resize (int argc, VALUE *argv, VALUE self)
     int count = rb_scan_args(argc, argv, "12", &xValue, &yValue, &zValue);
     if(count >= 1 && count <= 3)
     {
-        w = tableClass_fixDimensionValue(xValue);
-        if(count >= 2)
-            h = tableClass_fixDimensionValue(yValue);
-        else
-            h = 1;
-        if(count >= 3)
-            d = tableClass_fixDimensionValue(zValue);
-        else
-            d = 1;
-
         RGSS::Table *table;
         Data_Get_Struct(self, RGSS::Table, table);
-        table->resize(w, h, d);
+
+        w = tableClass_fixDimensionValue(xValue);
+        switch(count)
+        {
+            case 1:
+                table->resize(w);
+                break;
+            case 2:
+                h = tableClass_fixDimensionValue(yValue);
+                table->resize(w, h);
+                break;
+            case 3:
+                h = tableClass_fixDimensionValue(yValue);
+                d = tableClass_fixDimensionValue(zValue);
+                table->resize(w, h, d);
+                break;
+        }
     }
 
     return Qnil;
+}
+
+VALUE tableClass_init (int argc, VALUE *argv, VALUE self)
+{
+    tableClass_resize(argc, argv, self);
+    return self;
 }
 
 VALUE tableClass_getXSize (VALUE self)
