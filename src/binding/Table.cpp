@@ -1,33 +1,94 @@
 #include "common.h"
+#include "Table.hpp"
+
+int tableClass_fixDimensionValue (VALUE value)
+{
+    int i = NUM2INT(value);
+    if(i < 0)
+        return 0;
+    return i;
+}
+
+VALUE tableClass_allocate (VALUE klass)
+{
+    RGSS::Table *table;
+    return Data_Make_Struct(klass, RGSS::Table, 0, -1, table);
+}
 
 VALUE tableClass_init (int argc, VALUE *argv, VALUE self)
 {
-    // TODO
-    return Qnil;
+    VALUE xValue, yValue, zValue;
+    int w, h, d;
+
+    int count = rb_scan_args(argc, argv, "12", &xValue, &yValue, &zValue);
+    if(count >= 1 && count <= 3)
+    {
+        w = tableClass_fixDimensionValue(xValue);
+        if(count >= 2)
+            h = tableClass_fixDimensionValue(yValue);
+        else
+            h = 1;
+        if(count >= 3)
+            d = tableClass_fixDimensionValue(zValue);
+        else
+            d = 1;
+
+        RGSS::Table *table;
+        Data_Get_Struct(self, RGSS::Table, table);
+        table->resize(w, h, d);
+    }
+
+    return self;
 }
 
 VALUE tableClass_resize (int argc, VALUE *argv, VALUE self)
 {
-    // TODO
+    VALUE xValue, yValue, zValue;
+    int w, h, d;
+
+    int count = rb_scan_args(argc, argv, "12", &xValue, &yValue, &zValue);
+    if(count >= 1 && count <= 3)
+    {
+        w = tableClass_fixDimensionValue(xValue);
+        if(count >= 2)
+            h = tableClass_fixDimensionValue(yValue);
+        else
+            h = 1;
+        if(count >= 3)
+            d = tableClass_fixDimensionValue(zValue);
+        else
+            d = 1;
+
+        RGSS::Table *table;
+        Data_Get_Struct(self, RGSS::Table, table);
+        table->resize(w, h, d);
+    }
+
     return Qnil;
 }
 
 VALUE tableClass_getXSize (VALUE self)
 {
-    // TODO
-    return Qnil;
+    RGSS::Table *table;
+    Data_Get_Struct(self, RGSS::Table, table);
+    int width = table->getWidth();
+    return INT2FIX(width);
 }
 
 VALUE tableClass_getYSize (VALUE self)
 {
-    // TODO
-    return Qnil;
+    RGSS::Table *table;
+    Data_Get_Struct(self, RGSS::Table, table);
+    int height = table->getHeight();
+    return INT2FIX(height);
 }
 
 VALUE tableClass_getZSize (VALUE self)
 {
-    // TODO
-    return Qnil;
+    RGSS::Table *table;
+    Data_Get_Struct(self, RGSS::Table, table);
+    int depth = table->getDepth();
+    return INT2FIX(depth);
 }
 
 VALUE tableClass_getElement (int argc, VALUE *argv, VALUE self)
@@ -57,6 +118,7 @@ VALUE tableClass_dump (VALUE self, VALUE level)
 void initTableClass ()
 {
     VALUE tableClass = rb_define_class("Table", rb_cObject);
+    rb_define_alloc_func(tableClass, tableClass_allocate);
 
     rb_define_method(tableClass, "initialize", RB_FUNC(tableClass_init),       -1);
     rb_define_method(tableClass, "resize",     RB_FUNC(tableClass_resize),     -1);
