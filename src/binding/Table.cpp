@@ -9,10 +9,16 @@ int tableClass_fixDimensionValue (VALUE value)
     return i;
 }
 
+VALUE tableClass_free (RGSS::Table *table)
+{
+    if(table)
+        delete table;
+}
+
 VALUE tableClass_allocate (VALUE klass)
 {
     RGSS::Table *table;
-    return Data_Make_Struct(klass, RGSS::Table, 0, -1, table);
+    return Data_Make_Struct(klass, RGSS::Table, 0, tableClass_free, table);
 }
 
 VALUE tableClass_resize (int argc, VALUE *argv, VALUE self)

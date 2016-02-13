@@ -1,5 +1,5 @@
 #include "Table.hpp"
-#include "string.h"
+#include <string.h>
 
 namespace RGSS
 {
@@ -40,11 +40,14 @@ namespace RGSS
                 }
 
             if(_data)
-                delete _data;
+                delete[] _data;
             _data = newData;
         }
         else if(_data)
-            delete _data;
+        {
+            delete[] _data;
+            _data = NULL;
+        }
 
         _w = w;
         _h = h;
@@ -99,7 +102,7 @@ namespace RGSS
     Table::~Table ()
     {
         if(_data)
-            delete _data;
+            delete[] _data;
     }
 
     int Table::getWidth () const
