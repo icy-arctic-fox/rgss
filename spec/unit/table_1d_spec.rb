@@ -229,7 +229,7 @@ RSpec.describe Table do
 
           it 'fills with 0' do
             (1...5).each do |y|
-              (0...(xsize + 3)).each do |x|
+              (0...(xsize - 3)).each do |x|
                 expect(result[x, y]).to eq 0
               end
             end
@@ -357,7 +357,7 @@ RSpec.describe Table do
         end
 
         context 'smaller xsize' do
-          subject(:result) { table.resize(xsize - 3, 5) }
+          subject(:result) { table.resize(xsize - 3, 5, 7) }
 
           it 'retains existing values' do
             (0...(xsize - 3)).each do |x|

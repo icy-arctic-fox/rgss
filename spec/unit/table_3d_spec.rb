@@ -630,7 +630,7 @@ RSpec.describe Table do
           it 'retains existing values' do
             (0...xsize).each do |x|
               (0...(ysize - 2)).each do |y|
-                (0...(zsize + 2)).each do |z|
+                (0...zsize).each do |z|
                   expect(result[x, y, z]).to eq((x + 1) * (y + 2) * (z + 3))
                 end
               end
@@ -664,7 +664,7 @@ RSpec.describe Table do
           end
 
           it 'fills with 0' do
-            (0...(zsize + 2)).each do |z|
+            (0...(zsize - 2)).each do |z|
               (0...(ysize - 2)).each do |y|
                 (0...(xsize + 3)).each do |x|
                   if x >= xsize
@@ -680,7 +680,7 @@ RSpec.describe Table do
           subject(:result) { table.resize(xsize - 3, ysize - 2, zsize - 2) }
 
           it 'retains existing values' do
-            (0...xsize).each do |x|
+            (0...(xsize - 3)).each do |x|
               (0...(ysize - 2)).each do |y|
                 expect(result[x, y, 0]).to eq((x + 1) * (y + 2) * 3)
               end
@@ -692,7 +692,7 @@ RSpec.describe Table do
           subject(:result) { table.resize(xsize - 3, ysize - 2, zsize + 2) }
 
           it 'retains existing values' do
-            (0...xsize).each do |x|
+            (0...(xsize - 3)).each do |x|
               (0...(ysize - 2)).each do |y|
                 expect(result[x, y, 0]).to eq((x + 1) * (y + 2) * 3)
               end
@@ -750,9 +750,9 @@ RSpec.describe Table do
           end
 
           it 'fills with 0' do
-            (0...(zsize - 2)).each do |z|
+            (0...(zsize + 2)).each do |z|
               (0...(ysize + 3)).each do |y|
-                (0...(xsize + 2)).each do |x|
+                (0...(xsize - 2)).each do |x|
                   if y >= ysize || z >= zsize
                     expect(result[x, y, z]).to eq 0
                   end

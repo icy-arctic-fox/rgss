@@ -516,7 +516,7 @@ RSpec.describe Table do
           subject(:result) { table.resize(xsize - 3, ysize - 2, 2) }
 
           it 'retains existing values' do
-            (0...xsize).each do |x|
+            (0...(xsize - 3)).each do |x|
               (0...(ysize - 2)).each do |y|
                 expect(result[x, y, 0]).to eq((x + 1) * (y + 2) * 3)
               end
