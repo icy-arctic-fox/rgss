@@ -209,7 +209,9 @@ VALUE tableClass_dump (VALUE self, VALUE level)
                 memcpy(dataPtr, &value, sizeof(sf::Int16));
             }
 
-    return rb_str_new(data, dataLength);
+    VALUE str = rb_str_new(data, dataLength);
+    delete[] data;
+    return str;
 }
 
 void initTableClass ()
