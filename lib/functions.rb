@@ -1,12 +1,8 @@
 # Top-level methods provided by RGSS.
 
-def rgss_main(&block)
-  fail NotImplementedError
-end
+# @!method rgss_main
 
-def rgss_stop
-  fail NotImplementedError
-end
+# @!method rgss_stop
 
 def load_data(filename)
   File.open(filename, 'rb') do |f|
@@ -21,9 +17,7 @@ def save_data(obj, filename)
   nil
 end
 
-def msgbox(arg, *args)
-  fail NotImplementedError
-end
+# @!method msgbox(arg, *args)
 
 def msgbox_p(obj, *objs)
   msgbox obj.inspect, "\n", *(objs.flat_map { |obj| [obj, "\n"] }[0...-1])
