@@ -16,7 +16,7 @@ include_directories("${CMAKE_CURRENT_BINARY_DIR}/../../lib/rpg") # Directory con
 include_directories(../../include/binding)
 
 add_executable(Game ${SRC_FILES})
-target_link_libraries(Game rgss rgss_functions rgss_rpg "${RUBY_LIBRARY}")
+target_link_libraries(Game rgss rgss_rpg "${RUBY_LIBRARY}")
 
 # Look for shared libraries in current directory.
 set_target_properties(Game PROPERTIES INSTALL_RPATH .)

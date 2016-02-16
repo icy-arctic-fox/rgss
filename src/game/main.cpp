@@ -48,17 +48,6 @@ int initRPGScripts ()
     return state;
 }
 
-int initRGSS ()
-{
-    int state;
-    rb_eval_string_protect(functions_rb, &state); // Must be defined before the rest of RGSS.
-    if(state) // An error occurred.
-        displayError(); // Don't continue if there was an error.
-    else
-        Init_rgss(); // Implementations here override the already declared methods from functions_rb.
-    return state;
-}
-
 int initIniFile ()
 {
     int state;
@@ -84,9 +73,11 @@ int main (int argc, char** argv)
     // Don't continue processing if an error occurs anywhere along the way.
     int state;
     if(!(state = initIniFile()))
-        if(!(state = initRGSS()))
-            if(!(state = initRPGScripts()))
-                state = bootstrap();
+    {
+        Init_rgss();
+        if (!(state = initRPGScripts()))
+            state = bootstrap();
+    }
 
     ruby_finalize();
     return state;

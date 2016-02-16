@@ -29,6 +29,6 @@ set(SRC_FILES
         )
 
 add_library(rgss SHARED ${SRC_FILES})
-target_link_libraries(rgss rgss_impl "${RUBY_LIBRARY}")
+target_link_libraries(rgss rgss_impl rgss_functions "${RUBY_LIBRARY}")
 
 install(TARGETS rgss DESTINATION .)
