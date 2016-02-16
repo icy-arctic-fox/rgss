@@ -18,23 +18,6 @@ void initRuby (int argc, char **argv)
     ruby_init_loadpath();
 }
 
-void initRPGScripts ()
-{
-    for(int i = 0; i < rpg_script_count; ++i)
-        rb_eval_string(rpg_scripts[i]);
-}
-
-void initRGSS ()
-{
-    rb_eval_string(functions_rb); // Must be defined first.
-    Init_rgss(); // So that implementations here override the already declared methods.
-}
-
-void initIniFile ()
-{
-    rb_eval_string(inifile_rb);
-}
-
 void displayError ()
 {
     VALUE ruby_error    = rb_gv_get("$!");
@@ -45,6 +28,44 @@ void displayError ()
     char *message_str = StringValuePtr(error_message);
     char *trace_str   = StringValuePtr(error_stack);
     printf("%s\n%s\n", message_str, trace_str);
+}
+
+int initRPGScripts ()
+{
+    int state = 0;
+
+    for(int i = 0; i < rpg_script_count; ++i)
+    {
+        rb_eval_string_protect(rpg_scripts[i], &state);
+        if(state)
+        {
+            // An error occurred.
+            displayError();
+            break; // Don't process anymore scripts.
+        }
+    }
+
+    return state;
+}
+
+int initRGSS ()
+{
+    int state;
+    rb_eval_string_protect(functions_rb, &state); // Must be defined before the rest of RGSS.
+    if(state) // An error occurred.
+        displayError(); // Don't continue if there was an error.
+    else
+        Init_rgss(); // Implementations here override the already declared methods from functions_rb.
+    return state;
+}
+
+int initIniFile ()
+{
+    int state;
+    rb_eval_string_protect(inifile_rb, &state);
+    if(state) // An error occurred.
+        displayError();
+    return state;
 }
 
 int bootstrap ()
@@ -59,10 +80,13 @@ int bootstrap ()
 int main (int argc, char** argv)
 {
     initRuby(argc, argv);
-    initIniFile();
-    initRGSS();
-    initRPGScripts();
-    int state = bootstrap();
+
+    // Don't continue processing if an error occurs anywhere along the way.
+    int state;
+    if(!(state = initIniFile()))
+        if(!(state = initRGSS()))
+            if(!(state = initRPGScripts()))
+                state = bootstrap();
 
     ruby_finalize();
     return state;
