@@ -1,8 +1,10 @@
 require 'zlib'
 
-SCRIPTS_FILE = 'Data/Scripts.rvdata2'
+CONFIG_FILE = 'Game.ini'
+config = IniFile.load(CONFIG_FILE)
+scripts_file = config['Game']['Scripts']
 
-scripts = File.open(SCRIPTS_FILE, 'rb') do |f|
+scripts = File.open(scripts_file, 'rb') do |f|
   Marshal.load(f)
 end
 
