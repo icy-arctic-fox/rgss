@@ -24,6 +24,12 @@ void initRPGScripts ()
         rb_eval_string(rpg_scripts[i]);
 }
 
+void initRGSS ()
+{
+    rb_eval_string(functions_rb); // Must be defined first.
+    Init_rgss(); // So that implementations here override the already declared methods.
+}
+
 void initIniFile ()
 {
     rb_eval_string(inifile_rb);
@@ -54,10 +60,10 @@ int main (int argc, char** argv)
 {
     initRuby(argc, argv);
     initIniFile();
-    Init_rgss();
+    initRGSS();
     initRPGScripts();
     int state = bootstrap();
-    ruby_finalize();
 
+    ruby_finalize();
     return state;
 }
