@@ -6,6 +6,11 @@
 // It loads Data/Scripts.rvdata2 and processes the scripts inside it.
 extern const char bootstrap_rb[];
 
+// Defined in inifile.rb.c and generated from inifile.rb.
+// The inifile code was taken from here: https://github.com/twp/inifile
+// This code is used to load the Game.ini file.
+extern const char inifile_rb[];
+
 void initRuby (int argc, char **argv)
 {
     ruby_sysinit(&argc, &argv);
@@ -17,6 +22,11 @@ void initRPGScripts ()
 {
     for(int i = 0; i < rpg_script_count; ++i)
         rb_eval_string(rpg_scripts[i]);
+}
+
+void initIniFile ()
+{
+    rb_eval_string(inifile_rb);
 }
 
 void displayError ()
@@ -43,6 +53,7 @@ int bootstrap ()
 int main (int argc, char** argv)
 {
     initRuby(argc, argv);
+    initIniFile();
     Init_rgss();
     initRPGScripts();
     int state = bootstrap();
