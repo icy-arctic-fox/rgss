@@ -9,6 +9,8 @@ extern "C" {
 
 void Init_rgss ();
 
+extern const char functions_rb[];
+
 #ifdef __cplusplus
 }
 #endif
