@@ -4,10 +4,12 @@ find_package(Ruby REQUIRED)
 include_directories(${RUBY_INCLUDE_DIRS})
 
 ADD_RUBY_SCRIPT(bootstrap.rb)
+ADD_RUBY_SCRIPT(inifile.rb)
 
 set(SRC_FILES
         main.cpp
         bootstrap.rb.c
+        inifile.rb.c
         )
 
 include_directories("${CMAKE_CURRENT_BINARY_DIR}/../../lib/rpg") # Directory containing symbols.h.
