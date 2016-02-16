@@ -8,7 +8,8 @@ VALUE function_msgbox (int argc, VALUE *argv)
 
 VALUE function_rgss_main ()
 {
-    // TODO
+    // TODO: Start game window.
+    rb_yield_values(0);
     return Qnil;
 }
 
