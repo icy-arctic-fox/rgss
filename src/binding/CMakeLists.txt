@@ -32,3 +32,11 @@ add_library(rgss SHARED ${SRC_FILES})
 target_link_libraries(rgss rgss_impl rgss_functions "${RUBY_LIBRARY}")
 
 install(TARGETS rgss DESTINATION .)
+
+# Custom "install" target for just building and installing the native extension.
+add_custom_target(install.native-extension
+        "${CMAKE_COMMAND}" -DCMAKE_BUILD_TYPE=${CMAKE_BUILD_TYPE}
+        -P "${CMAKE_CURRENT_BINARY_DIR}/cmake_install.cmake"
+        DEPENDS rgss
+        COMMENT Installing Ruby native extension from ${CMAKE_CURRENT_BINARY_DIR}
+        )

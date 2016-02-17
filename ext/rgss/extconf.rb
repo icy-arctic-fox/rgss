@@ -46,7 +46,7 @@ Dir.chdir(RGSS_DIR) do
     INSTALL_PREFIX = File.join(RGSS_DIR, BUILD_DIR)
     GENERATOR      = MAKE.include?('mingw') ? 'MinGW Makefiles' : 'Unix Makefiles'
     sys('cmake', RGSS_DIR, '-G', GENERATOR, "-DCMAKE_INSTALL_PREFIX=#{INSTALL_PREFIX}", "-DCMAKE_BUILD_TYPE=#{CMAKE_BUILD_TYPE}")
-    sys(MAKE, 'install')
+    sys(MAKE, 'install.native-extension')
 
     # Installed files are dropped in the current directory.
     # Copy them to the staging area.
