@@ -5,9 +5,7 @@ extern "C" {
 #endif
 
 void initRGSSResetClass() {
-    ID exceptionId = rb_intern("Exception");
-    VALUE exceptionClass = rb_const_get(rb_cObject, exceptionId);
-    rb_define_class("RGSSReset", exceptionClass);
+    rb_define_class("RGSSReset", rb_eException);
 }
 
 #ifdef __cplusplus
