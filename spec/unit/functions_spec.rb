@@ -45,6 +45,12 @@ RSpec.describe 'Top-level functions' do
         expect(reset(3)).to be 3
       end
     end
+
+    context 'when a non-reset exception is raised' do
+      it 'propagates the exception' do
+        expect { rgss_main { fail 'Whoops' } }.to raise_error(RuntimeError)
+      end
+    end
   end
 
   describe 'load_data' do
