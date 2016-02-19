@@ -17,6 +17,7 @@ The CMake method is used to produce files that can be substituted in for Enterbr
 
 The following is a description of the directory structure used for this project.
 
+- `cmake/` - Custom CMake modules.
 - `ext/` - Ruby native extension for RGSS. The actual code for RGSS is not here. Describes how to build RGSS with CMake.
 - `include/` - Header files for C++ implementation of the RGSS engine.
   - `binding/` - Header files specific to the binding. These are needed to include the binding in C/C++ code.
