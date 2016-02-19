@@ -6,6 +6,7 @@ set(SRC_FILES
         Color.cpp
         Rect.cpp
         Table.cpp
+        TextAppearance.cpp
         Tone.cpp
         )
 
