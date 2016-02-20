@@ -171,8 +171,8 @@ VALUE tableClass_setElement (int argc, VALUE *argv, VALUE self)
                 return arg3;
         }
     }
-    else
-        return Qnil;
+
+    return Qnil;
 }
 
 VALUE tableClass_load (VALUE tableClass, VALUE marshaled)
