@@ -200,7 +200,7 @@ VALUE toneClass_dump (VALUE self, VALUE level)
     return rb_str_new(data, dataLength);
 }
 
-void initToneClass ()
+VALUE initToneClass ()
 {
     VALUE toneClass = rb_define_class("Tone", rb_cObject);
     rb_define_alloc_func(toneClass, toneClass_allocate);
@@ -220,4 +220,6 @@ void initToneClass ()
 
     rb_define_singleton_method(toneClass, "_load", RB_FUNC(toneClass_load), 1);
     rb_define_method(toneClass, "_dump", RB_FUNC(toneClass_dump), 1);
+
+    return toneClass;
 }

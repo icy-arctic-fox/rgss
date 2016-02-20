@@ -203,7 +203,7 @@ VALUE rectClass_load (VALUE klass, VALUE marshaled)
     return instance;
 }
 
-void initRectClass ()
+VALUE initRectClass ()
 {
     VALUE rectClass = rb_define_class("Rect", rb_cObject);
     rb_define_alloc_func(rectClass, rectClass_allocate);
@@ -224,4 +224,6 @@ void initRectClass ()
 
     rb_define_method(rectClass, "_dump", RB_FUNC(rectClass_dump), 1);
     rb_define_singleton_method(rectClass, "_load", RB_FUNC(rectClass_load), 1);
+
+    return rectClass;
 }

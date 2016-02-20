@@ -162,7 +162,7 @@ VALUE planeClass_setTone (VALUE self, VALUE value)
     return Qnil;
 }
 
-void initPlaneClass ()
+VALUE initPlaneClass ()
 {
     VALUE planeClass = rb_define_class("Plane", rb_cObject);
 
@@ -193,4 +193,6 @@ void initPlaneClass ()
     rb_define_method(planeClass, "color=",      RB_FUNC(planeClass_setColor),      1);
     rb_define_method(planeClass, "tone",        RB_FUNC(planeClass_getTone),       0);
     rb_define_method(planeClass, "tone=",       RB_FUNC(planeClass_setTone),       1);
+
+    return planeClass;
 }

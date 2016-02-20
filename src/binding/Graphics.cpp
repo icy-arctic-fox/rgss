@@ -108,7 +108,7 @@ VALUE graphicsModule_setBrightness (VALUE graphicsModule, VALUE value)
     return value;
 }
 
-void initGraphicsModule ()
+VALUE initGraphicsModule ()
 {
     VALUE graphicsModule = rb_define_module("Graphics");
 
@@ -130,4 +130,6 @@ void initGraphicsModule ()
     rb_define_singleton_method(graphicsModule, "frame_count=",   RB_FUNC(graphicsModule_setFrameCount),  1);
     rb_define_singleton_method(graphicsModule, "brightness",     RB_FUNC(graphicsModule_getBrightness),  0);
     rb_define_singleton_method(graphicsModule, "brightness=",    RB_FUNC(graphicsModule_setBrightness),  1);
+
+    return graphicsModule;
 }

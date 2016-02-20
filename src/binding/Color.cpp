@@ -200,7 +200,7 @@ VALUE colorClass_dump (VALUE self, VALUE level)
     return rb_str_new(data, dataLength);
 }
 
-void initColorClass ()
+VALUE initColorClass ()
 {
     VALUE colorClass = rb_define_class("Color", rb_cObject);
     rb_define_alloc_func(colorClass, colorClass_allocate);
@@ -220,4 +220,6 @@ void initColorClass ()
 
     rb_define_singleton_method(colorClass, "_load", RB_FUNC(colorClass_load), 1);
     rb_define_method(colorClass, "_dump", RB_FUNC(colorClass_dump), 1);
+
+    return colorClass;
 }

@@ -306,7 +306,7 @@ VALUE windowClass_setTone (VALUE self, VALUE value)
     return Qnil;
 }
 
-void initWindowClass ()
+VALUE initWindowClass ()
 {
     VALUE windowClass = rb_define_class("Window", rb_cObject);
 
@@ -361,4 +361,6 @@ void initWindowClass ()
     rb_define_method(windowClass, "openness=",         RB_FUNC(windowClass_setOpenness),         1);
     rb_define_method(windowClass, "tone",              RB_FUNC(windowClass_getTone),             0);
     rb_define_method(windowClass, "tone=",             RB_FUNC(windowClass_setTone),             1);
+
+    return windowClass;
 }

@@ -4,8 +4,8 @@
 extern "C" {
 #endif
 
-void initRGSSResetClass() {
-    rb_define_class("RGSSReset", rb_eException);
+VALUE initRGSSResetClass() {
+    return rb_define_class("RGSSReset", rb_eException);
 }
 
 #ifdef __cplusplus

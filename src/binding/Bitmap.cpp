@@ -126,7 +126,7 @@ VALUE bitmapClass_setFont (VALUE self, VALUE value)
     return Qnil;
 }
 
-void initBitmapClass ()
+VALUE initBitmapClass ()
 {
     VALUE bitmapClass = rb_define_class("Bitmap", rb_cObject);
 
@@ -151,4 +151,6 @@ void initBitmapClass ()
     rb_define_method(bitmapClass, "text_size",          RB_FUNC(bitmapClass_textSize),          1);
     rb_define_method(bitmapClass, "font",               RB_FUNC(bitmapClass_getFont),           0);
     rb_define_method(bitmapClass, "font=",              RB_FUNC(bitmapClass_setFont),           1);
+
+    return bitmapClass;
 }

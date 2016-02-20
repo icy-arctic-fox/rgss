@@ -84,7 +84,7 @@ VALUE audioModule_seStop (VALUE audioModule)
     return Qnil;
 }
 
-void initAudioModule ()
+VALUE initAudioModule ()
 {
     VALUE audioModule = rb_define_module("Audio");
 
@@ -102,4 +102,6 @@ void initAudioModule ()
     rb_define_singleton_method(audioModule, "me_fade",    RB_FUNC(audioModule_meFade),     1);
     rb_define_singleton_method(audioModule, "se_play",    RB_FUNC(audioModule_sePlay),    -1);
     rb_define_singleton_method(audioModule, "se_stop",    RB_FUNC(audioModule_seStop),     0);
+
+    return audioModule;
 }

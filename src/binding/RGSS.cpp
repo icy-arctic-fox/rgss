@@ -1,46 +1,59 @@
 #include "common.h"
 
 // Prototypes for initialization functions.
-void initAudioModule ();
-void initGraphicsModule ();
-void initInputModule ();
-void initBitmapClass ();
-void initColorClass ();
-void initFontClass ();
-void initPlaneClass ();
-void initRectClass ();
-void initTableClass ();
-void initTilemapClass ();
-void initToneClass ();
-void initViewportClass ();
-void initSpriteClass ();
-void initWindowClass ();
+VALUE initAudioModule ();
+VALUE initGraphicsModule ();
+VALUE initInputModule ();
+VALUE initBitmapClass ();
+VALUE initColorClass ();
+VALUE initFontClass ();
+VALUE initPlaneClass ();
+VALUE initRectClass ();
+VALUE initTableClass ();
+VALUE initTilemapClass ();
+VALUE initToneClass ();
+VALUE initViewportClass ();
+VALUE initSpriteClass ();
+VALUE initWindowClass ();
 void initFunctions ();
 
 extern "C" {
 
-void initRGSSErrorClass ();
-void initRGSSResetClass ();
+VALUE initRGSSErrorClass ();
+VALUE initRGSSResetClass ();
+
+VALUE audioModule, graphicsModule, inputModule,
+        bitmapClass, colorClass, fontClass, planeClass,
+        rectClass, tableClass, tilemapClass, toneClass,
+        viewportClass, spriteClass, windowClass,
+        rgssErrorClass, rgssResetClass;
 
 // Entry point for Ruby.
 void Init_rgss ()
 {
-    initAudioModule();
-    initGraphicsModule();
-    initInputModule();
-    initBitmapClass();
-    initColorClass();
-    initFontClass();
-    initPlaneClass();
-    initRectClass();
-    initSpriteClass();
-    initTableClass();
-    initTilemapClass();
-    initToneClass();
-    initViewportClass();
-    initWindowClass();
-    initRGSSErrorClass();
-    initRGSSResetClass();
+    // Initialize modules.
+    audioModule = initAudioModule();
+    graphicsModule = initGraphicsModule();
+    inputModule = initInputModule();
+
+    // Initialize classes.
+    bitmapClass   = initBitmapClass();
+    colorClass    = initColorClass();
+    fontClass     = initFontClass();
+    planeClass    = initPlaneClass();
+    rectClass     = initRectClass();
+    spriteClass   = initSpriteClass();
+    tableClass    = initTableClass();
+    tilemapClass  = initTilemapClass();
+    toneClass     = initToneClass();
+    viewportClass = initViewportClass();
+    windowClass   = initWindowClass();
+
+    // Initialize exceptions.
+    rgssErrorClass = initRGSSErrorClass();
+    rgssResetClass = initRGSSResetClass();
+
+    // Initialize top-level functions.
     initFunctions();
 }
 

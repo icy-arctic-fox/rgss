@@ -36,7 +36,7 @@ VALUE inputModule_dir8 (VALUE inputModule)
     return Qnil;
 }
 
-void initInputModule ()
+VALUE initInputModule ()
 {
     VALUE inputModule = rb_define_module("Input");
 
@@ -67,4 +67,6 @@ void initInputModule ()
     rb_define_const(inputModule, "F7",    ID2SYM(rb_intern("F7")));
     rb_define_const(inputModule, "F8",    ID2SYM(rb_intern("F8")));
     rb_define_const(inputModule, "F9",    ID2SYM(rb_intern("F9")));
+
+    return inputModule;
 }

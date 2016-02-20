@@ -256,7 +256,7 @@ VALUE fontClass_exist (VALUE fontClass, VALUE name)
     return Qnil;
 }
 
-void initFontClass ()
+VALUE initFontClass ()
 {
     VALUE fontClass = rb_define_class("Font", rb_cObject);
     rb_define_alloc_func(fontClass, fontClass_allocate);
@@ -296,4 +296,6 @@ void initFontClass ()
     rb_define_singleton_method(fontClass, "default_out_color",  RB_FUNC(fontClass_getDefaultOutColor), 0);
     rb_define_singleton_method(fontClass, "default_out_color=", RB_FUNC(fontClass_setDefaultOutColor), 1);
     rb_define_singleton_method(fontClass, "exist?",             RB_FUNC(fontClass_exist),              1);
+
+    return fontClass;
 }

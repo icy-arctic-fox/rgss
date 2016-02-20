@@ -9,6 +9,11 @@ extern "C" {
 
 void Init_rgss ();
 
+extern VALUE audioModule, graphicsModule, inputModule,
+        bitmapClass, colorClass, fontClass, PlaneClass,
+        rectClass, tableClass, tilemapClass, toneClass,
+        viewportClass, spriteClass, windowClass;
+
 #ifdef __cplusplus
 }
 #endif

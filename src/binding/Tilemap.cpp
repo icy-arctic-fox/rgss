@@ -96,7 +96,7 @@ VALUE tilemapClass_setOY (VALUE self, VALUE value)
     return Qnil;
 }
 
-void initTilemapClass ()
+VALUE initTilemapClass ()
 {
     VALUE tilemapClass = rb_define_class("Tilemap", rb_cObject);
 
@@ -116,4 +116,6 @@ void initTilemapClass ()
     rb_define_method(tilemapClass, "ox=",        RB_FUNC(tilemapClass_setOX),         1);
     rb_define_method(tilemapClass, "oy",         RB_FUNC(tilemapClass_getOY),         0);
     rb_define_method(tilemapClass, "oy=",        RB_FUNC(tilemapClass_setOY),         1);
+
+    return tilemapClass;
 }

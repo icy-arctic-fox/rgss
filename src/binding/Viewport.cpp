@@ -114,7 +114,7 @@ VALUE viewportClass_setTone (VALUE self, VALUE value)
     return Qnil;
 }
 
-void initViewportClass ()
+VALUE initViewportClass ()
 {
     VALUE viewportClass = rb_define_class("Viewport", rb_cObject);
 
@@ -137,4 +137,6 @@ void initViewportClass ()
     rb_define_method(viewportClass, "color=",     RB_FUNC(viewportClass_setColor),    1);
     rb_define_method(viewportClass, "tone",       RB_FUNC(viewportClass_getTone),     0);
     rb_define_method(viewportClass, "tone=",      RB_FUNC(viewportClass_setTone),     1);
+
+    return viewportClass;
 }

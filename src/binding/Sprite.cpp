@@ -318,7 +318,7 @@ VALUE spriteClass_setTone (VALUE self, VALUE value)
     return Qnil;
 }
 
-void initSpriteClass ()
+VALUE initSpriteClass ()
 {
     VALUE spriteClass = rb_define_class("Sprite", rb_cObject);
 
@@ -375,4 +375,6 @@ void initSpriteClass ()
     rb_define_method(spriteClass, "color=",        RB_FUNC(spriteClass_setColor),        1);
     rb_define_method(spriteClass, "tone",          RB_FUNC(spriteClass_getTone),         0);
     rb_define_method(spriteClass, "tone=",         RB_FUNC(spriteClass_setTone),         1);
+
+    return spriteClass;
 }

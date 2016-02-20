@@ -4,8 +4,8 @@
 extern "C" {
 #endif
 
-void initRGSSErrorClass() {
-    rb_define_class("RGSSError", rb_eStandardError);
+VALUE initRGSSErrorClass() {
+    return rb_define_class("RGSSError", rb_eStandardError);
 }
 
 #ifdef __cplusplus

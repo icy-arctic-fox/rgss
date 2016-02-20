@@ -248,7 +248,7 @@ VALUE tableClass_dump (VALUE self, VALUE level)
     return str;
 }
 
-void initTableClass ()
+VALUE initTableClass ()
 {
     VALUE tableClass = rb_define_class("Table", rb_cObject);
     rb_define_alloc_func(tableClass, tableClass_allocate);
@@ -263,4 +263,6 @@ void initTableClass ()
 
     rb_define_singleton_method(tableClass, "_load", RB_FUNC(tableClass_load), 1);
     rb_define_method(tableClass, "_dump", RB_FUNC(tableClass_dump), 1);
+
+    return tableClass;
 }
