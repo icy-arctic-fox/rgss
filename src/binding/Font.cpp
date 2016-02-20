@@ -1,87 +1,133 @@
 #include "common.h"
+#include "TextAppearance.hpp"
+
+struct Font
+{
+    VALUE name;
+    RGSS::TextAppearance appearance;
+};
+
+struct Font defaultFont;
+
+VALUE fontClass_free (struct Font *font)
+{
+    if(font)
+        delete font;
+    return Qnil;
+}
 
 VALUE fontClass_allocate (VALUE klass)
 {
-    // TODO
-    return Qnil;
+    struct Font *font = new struct Font;
+    font->name = Qnil;
+    font->appearance = RGSS::TextAppearance();
+    return Data_Wrap_Struct(klass, 0, fontClass_free, font);
 }
 
 VALUE fontClass_init (int argc, VALUE *argv, VALUE self)
 {
     // TODO
-    return Qnil;
+    return self;
 }
 
 VALUE fontClass_getName (VALUE self)
 {
-    // TODO
-    return Qnil;
+    struct Font *font;
+    Data_Get_Struct(self, struct Font, font);
+    return font->name;
 }
 
 VALUE fontClass_setName (VALUE self, VALUE value)
 {
-    // TODO
-    return Qnil;
+    struct Font *font;
+    Data_Get_Struct(self, struct Font, font);
+    font->name = value;
+    return value;
 }
 
 VALUE fontClass_getSize (VALUE self)
 {
-    // TODO
-    return Qnil;
+    struct Font *font;
+    Data_Get_Struct(self, struct Font, font);
+    int size = font->appearance.getSize();
+    return INT2FIX(size);
 }
 
 VALUE fontClass_setSize (VALUE self, VALUE value)
 {
-    // TODO
-    return Qnil;
+    struct Font *font;
+    Data_Get_Struct(self, struct Font, font);
+    int size = NUM2INT(value);
+    font->appearance.setSize(size);
+    return value;
 }
 
 VALUE fontClass_getBold (VALUE self)
 {
-    // TODO
-    return Qnil;
+    struct Font *font;
+    Data_Get_Struct(self, struct Font, font);
+    bool bold = font->appearance.isBold();
+    return bold ? Qtrue : Qfalse;
 }
 
 VALUE fontClass_setBold (VALUE self, VALUE value)
 {
-    // TODO
-    return Qnil;
+    struct Font *font;
+    Data_Get_Struct(self, struct Font, font);
+    bool bold = RTEST(value);
+    font->appearance.setBold(bold);
+    return value;
 }
 
 VALUE fontClass_getItalic (VALUE self)
 {
-    // TODO
-    return Qnil;
+    struct Font *font;
+    Data_Get_Struct(self, struct Font, font);
+    bool italic = font->appearance.isItalic();
+    return italic ? Qtrue : Qfalse;
 }
 
 VALUE fontClass_setItalic (VALUE self, VALUE value)
 {
-    // TODO
-    return Qnil;
+    struct Font *font;
+    Data_Get_Struct(self, struct Font, font);
+    bool italic = RTEST(value);
+    font->appearance.setItalic(italic);
+    return value;
 }
 
 VALUE fontClass_getOutline (VALUE self)
 {
-    // TODO
-    return Qnil;
+    struct Font *font;
+    Data_Get_Struct(self, struct Font, font);
+    bool outline = font->appearance.hasOutline();
+    return outline ? Qtrue : Qfalse;
 }
 
 VALUE fontClass_setOutline (VALUE self, VALUE value)
 {
-    // TODO
-    return Qnil;
+    struct Font *font;
+    Data_Get_Struct(self, struct Font, font);
+    bool outline = RTEST(value);
+    font->appearance.setOutline(outline);
+    return value;
 }
 
 VALUE fontClass_getShadow (VALUE self)
 {
-    // TODO
-    return Qnil;
+    struct Font *font;
+    Data_Get_Struct(self, struct Font, font);
+    bool shadow = font->appearance.hasShadow();
+    return shadow ? Qtrue : Qfalse;
 }
 
 VALUE fontClass_setShadow (VALUE self, VALUE value)
 {
-    // TODO
-    return Qnil;
+    struct Font *font;
+    Data_Get_Struct(self, struct Font, font);
+    bool shadow = RTEST(value);
+    font->appearance.setShadow(shadow);
+    return value;
 }
 
 VALUE fontClass_getColor (VALUE self)
