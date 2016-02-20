@@ -30,9 +30,9 @@ namespace RGSS
         void setOutline (bool outline);
         bool hasShadow () const;
         void setShadow (bool shadow);
-        Color getForegroundColor () const;
+        Color &getForegroundColor ();
         void setForegroundColor (Color &color);
-        Color getOutlineColor () const;
+        Color &getOutlineColor ();
         void setOutlineColor (Color &color);
 
         void applyTo (sf::Text &text);

@@ -63,24 +63,24 @@ namespace RGSS
         _shadow = shadow;
     }
 
-    Color TextAppearance::getForegroundColor () const
+    Color &TextAppearance::getForegroundColor ()
     {
         return _foreColor;
     }
 
     void TextAppearance::setForegroundColor (Color &color)
     {
-        // TODO
+        _foreColor = color;
     }
 
-    Color TextAppearance::getOutlineColor () const
+    Color &TextAppearance::getOutlineColor ()
     {
         return _outColor;
     }
 
     void TextAppearance::setOutlineColor (Color &color)
     {
-        // TODO
+        _outColor = color;
     }
 
     void TextAppearance::applyTo (sf::Text &text)
