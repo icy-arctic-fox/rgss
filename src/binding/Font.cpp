@@ -3,11 +3,18 @@
 
 struct Font
 {
-    VALUE name;
+    VALUE name, foreColorValue, outColorValue;
+    RGSS::Color *foreColor, *outColor;
     RGSS::TextAppearance appearance;
 };
 
 struct Font defaultFont;
+
+void fontClass_mark (struct Font *font)
+{
+    rb_gc_mark(font->foreColorValue);
+    rb_gc_mark(font->outColorValue);
+}
 
 VALUE fontClass_free (struct Font *font)
 {
@@ -21,7 +28,11 @@ VALUE fontClass_allocate (VALUE klass)
     struct Font *font = new struct Font;
     font->name = Qnil;
     font->appearance = RGSS::TextAppearance();
-    return Data_Wrap_Struct(klass, 0, fontClass_free, font);
+    font->foreColor = &font->appearance.getForegroundColor();
+    font->outColor = &font->appearance.getOutlineColor();
+    font->foreColorValue = Data_Wrap_Struct(colorClass, 0, 0, font->foreColor);
+    font->outColorValue = Data_Wrap_Struct(colorClass, 0, 0, font->outColor);
+    return Data_Wrap_Struct(klass, fontClass_mark, fontClass_free, font);
 }
 
 VALUE fontClass_init (int argc, VALUE *argv, VALUE self)
@@ -42,6 +53,7 @@ VALUE fontClass_setName (VALUE self, VALUE value)
     struct Font *font;
     Data_Get_Struct(self, struct Font, font);
     font->name = value;
+    // TODO: Update font face.
     return value;
 }
 
@@ -132,26 +144,36 @@ VALUE fontClass_setShadow (VALUE self, VALUE value)
 
 VALUE fontClass_getColor (VALUE self)
 {
-    // TODO
-    return Qnil;
+    struct Font *font;
+    Data_Get_Struct(self, struct Font, font);
+    return font->foreColorValue;
 }
 
 VALUE fontClass_setColor (VALUE self, VALUE value)
 {
-    // TODO
-    return Qnil;
+    struct Font *font;
+    Data_Get_Struct(self, struct Font, font);
+    RGSS::Color *color;
+    Data_Get_Struct(value, RGSS::Color, color);
+    font->appearance.setForegroundColor(*color);
+    return value;
 }
 
 VALUE fontClass_getOutColor (VALUE self)
 {
-    // TODO
-    return Qnil;
+    struct Font *font;
+    Data_Get_Struct(self, struct Font, font);
+    return font->outColorValue;
 }
 
 VALUE fontClass_setOutColor (VALUE self, VALUE value)
 {
-    // TODO
-    return Qnil;
+    struct Font *font;
+    Data_Get_Struct(self, struct Font, font);
+    RGSS::Color *color;
+    Data_Get_Struct(value, RGSS::Color, color);
+    font->appearance.setOutlineColor(*color);
+    return value;
 }
 
 VALUE fontClass_getDefaultName (VALUE fontClass)
