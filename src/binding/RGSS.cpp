@@ -1,5 +1,12 @@
 #include "common.h"
 
+// Ruby values for the modules and classes.
+VALUE audioModule, graphicsModule, inputModule,
+        bitmapClass, colorClass, fontClass, planeClass,
+        rectClass, tableClass, tilemapClass, toneClass,
+        viewportClass, spriteClass, windowClass,
+        rgssErrorClass, rgssResetClass;
+
 // Prototypes for initialization functions.
 VALUE initAudioModule ();
 VALUE initGraphicsModule ();
@@ -21,12 +28,6 @@ extern "C" {
 
 VALUE initRGSSErrorClass ();
 VALUE initRGSSResetClass ();
-
-VALUE audioModule, graphicsModule, inputModule,
-        bitmapClass, colorClass, fontClass, planeClass,
-        rectClass, tableClass, tilemapClass, toneClass,
-        viewportClass, spriteClass, windowClass,
-        rgssErrorClass, rgssResetClass;
 
 // Entry point for Ruby.
 void Init_rgss ()

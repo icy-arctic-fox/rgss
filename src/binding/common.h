@@ -16,6 +16,12 @@ extern "C" {
 // Convenience macro to convert C true/false to Ruby true/false.
 #define VALUE2BOOL(VALUE) (VALUE) ? Qtrue : Qfalse;
 
+// Ruby values for each module and class.
+extern VALUE audioModule, graphicsModule, inputModule,
+        bitmapClass, colorClass, fontClass, PlaneClass,
+        rectClass, tableClass, tilemapClass, toneClass,
+        viewportClass, spriteClass, windowClass;
+
 #endif /* __cplusplus */
 
 #endif	/* COMMON_H */
