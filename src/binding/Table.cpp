@@ -13,6 +13,7 @@ VALUE tableClass_free (RGSS::Table *table)
 {
     if(table)
         delete table;
+    return Qnil;
 }
 
 VALUE tableClass_allocate (VALUE klass)
