@@ -27,11 +27,19 @@ endif()
 # Location of the Ruby to compiled into the engine.
 set(RUBY_STAGE_DIR "${CMAKE_BINARY_DIR}/ruby-staging")
 
+# Various options for configuring Ruby.
+set(CONFIGURE_OPTIONS
+        "--prefix=${RUBY_STAGE_DIR}"
+        --disable-install-doc # Don't install documentation.
+        --disable-install-rdoc
+        --disable-install-capi
+        )
+
 # Add Ruby as an external project.
 ExternalProject_Add(ruby
         GIT_REPOSITORY https://github.com/ruby/ruby.git
         GIT_TAG ${RUBY_GIT_TAG}
-        CONFIGURE_COMMAND "${AUTOCONF_PROGRAM}" COMMAND ./configure "--prefix=${RUBY_STAGE_DIR}"
+        CONFIGURE_COMMAND "${AUTOCONF_PROGRAM}" COMMAND ./configure ${CONFIGURE_OPTIONS}
         BUILD_COMMAND "${CMAKE_MAKE_PROGRAM}"
         BUILD_IN_SOURCE TRUE
         INSTALL_COMMAND "${CMAKE_MAKE_PROGRAM}" install
