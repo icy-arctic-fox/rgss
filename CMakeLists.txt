@@ -18,6 +18,7 @@ elseif(CMAKE_COMPILER_IS_GNUCC OR CMAKE_COMPILER_IS_GNUCXX)
     set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wall")
 endif()
 
+add_subdirectory(ruby)
 add_subdirectory(src/rb2c) # Must be defined first so that rb2c is available for rgss_rpg.
 add_subdirectory(lib)
 add_subdirectory(src)

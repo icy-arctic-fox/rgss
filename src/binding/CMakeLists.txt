@@ -1,6 +1,9 @@
 cmake_minimum_required(VERSION 3.0)
 
 # Obviously need Ruby for a Ruby binding.
+# However, things are a bit strange here.
+# The gem version of RGSS should link against the current Ruby.
+# The bundled engine should link against the staged Ruby.
 find_package(Ruby REQUIRED)
 include_directories(${RUBY_INCLUDE_DIRS})
 
@@ -29,6 +32,9 @@ set(SRC_FILES
         )
 
 add_library(rgss SHARED ${SRC_FILES})
+
+# Here we use a shared Ruby library from the system to resolve links.
+# But when the game executable is created, the staged Ruby will be linked against.
 target_link_libraries(rgss rgss_impl rgss_functions "${RUBY_LIBRARY}")
 
 install(TARGETS rgss DESTINATION .)

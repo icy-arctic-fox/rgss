@@ -1,7 +1,8 @@
 cmake_minimum_required(VERSION 3.0)
 
-find_package(Ruby REQUIRED)
-include_directories(${RUBY_INCLUDE_DIRS})
+# We used the staged (ExternalProject) copy of Ruby here.
+# The game should have Ruby statically linked (included) in the resulting executable.
+include_directories(${STAGED_RUBY_INCLUDE_DIR})
 
 ADD_RUBY_SCRIPT(bootstrap.rb)
 ADD_RUBY_SCRIPT(inifile.rb)
@@ -16,7 +17,7 @@ include_directories("${CMAKE_CURRENT_BINARY_DIR}/../../lib/rpg") # Directory con
 include_directories(../../include/binding)
 
 add_executable(Game ${SRC_FILES})
-target_link_libraries(Game rgss rgss_rpg "${RUBY_LIBRARY}")
+target_link_libraries(Game rgss rgss_rpg ruby-static)
 
 # Look for shared libraries in current directory.
 set_target_properties(Game PROPERTIES INSTALL_RPATH .)
