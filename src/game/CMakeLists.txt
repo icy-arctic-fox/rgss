@@ -19,6 +19,10 @@ include_directories(../../include/binding)
 add_executable(Game ${SRC_FILES})
 target_link_libraries(Game rgss rgss_rpg ruby-static)
 
+if(UNIX)
+    target_link_libraries(Game pthread gmp dl crypt)
+endif()
+
 # Look for shared libraries in current directory.
 set_target_properties(Game PROPERTIES INSTALL_RPATH .)
 install(TARGETS Game DESTINATION .)
