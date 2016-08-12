@@ -26,7 +26,3 @@ endif()
 # Look for shared libraries in current directory.
 set_target_properties(Game PROPERTIES INSTALL_RPATH .)
 install(TARGETS Game DESTINATION .)
-
-# Install the Ruby library along-side the game.
-file(GLOB RUBY_LIBS "${RUBY_LIBRARY}.*")
-install(FILES ${RUBY_LIBS} DESTINATION .)
