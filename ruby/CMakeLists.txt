@@ -26,6 +26,13 @@ endif()
 
 # Location of the Ruby to compiled into the engine.
 set(RUBY_STAGE_DIR "${CMAKE_BINARY_DIR}/ruby-staging")
+set(STAGED_RUBY_INCLUDE_PATH "${RUBY_STAGE_DIR}/include/${RUBY_GIT_TAG}")
+set(STAGED_RUBY_LIBRARY "${RUBY_STAGE_DIR}/lib/${CMAKE_STATIC_LIBRARY_PREFIX}ruby-static.${CMAKE_STATIC_LIBRARY_SUFFIX}"
+        CACHE INTERNAL "Path to static Ruby library"
+        )
+set(STAGED_RUBY_INCLUDE_DIR "${STAGED_RUBY_INCLUDE_PATH}" "${STAGED_RUBY_INCLUDE_PATH}/arch"
+        CACHE INTERNAL "Path to staged Ruby header files"
+        )
 
 # Various options for configuring Ruby.
 set(CONFIGURE_OPTIONS
@@ -33,6 +40,8 @@ set(CONFIGURE_OPTIONS
         --disable-install-doc # Don't install documentation.
         --disable-install-rdoc
         --disable-install-capi
+        "--with-rubyhdrdir=${STAGED_RUBY_INCLUDE_PATH}" # Install headers to paths CMake knows.
+        "--with-rubyarchhdrdir=${STAGED_RUBY_INCLUDE_PATH}/arch"
         )
 
 # Add Ruby as an external project.
@@ -43,13 +52,6 @@ ExternalProject_Add(ruby
         BUILD_COMMAND "${CMAKE_MAKE_PROGRAM}"
         BUILD_IN_SOURCE TRUE
         INSTALL_COMMAND "${CMAKE_MAKE_PROGRAM}" install
-    )
-
-set(STAGED_RUBY_INCLUDE_DIR "${RUBY_STAGE_DIR}/include"
-        CACHE INTERNAL "Path to staged Ruby header files"
-    )
-set(STAGED_RUBY_LIBRARY "${RUBY_STAGE_DIR}/lib/${CMAKE_STATIC_LIBRARY_PREFIX}ruby-static.${CMAKE_STATIC_LIBRARY_SUFFIX}"
-        CACHE INTERNAL "Path to static Ruby library"
     )
 
 add_library(ruby-static STATIC IMPORTED)
