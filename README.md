@@ -24,6 +24,7 @@ The following is a description of the directory structure used for this project.
   - `rgss/` - Header files for the implementation of RGSS.
 - `lib/` - Ruby scripts. This includes everything in the RPG module and method stubs for the RGSS modules and classes.
   - `rpg/` - RPG module. Contains the classes provided by RPG Maker VX. RGSS doesn't depend on these.
+- `ruby/` - CMake configuration for building our own Ruby.
 - `spec/` - Test scripts. RSpec is used to test the functionality.
   - `unit/` - Unit tests for the RGSS implementation.
 - `src/` - C/C++ code. Native extension code for the gem and Game executable.
@@ -55,3 +56,28 @@ And then execute:
 Or install it yourself as:
 
     $ gem install rpg-maker-rgss3
+
+Pre-requisites
+--------------
+
+Ruby 1.9.3 or higher.
+Ruby must be installed on the system even though source for one is downloaded.
+The Ruby compilation process for 1.8+ requires it.
+
+### Linux
+
+* x11
+* xrandr
+* opengl
+* udev
+* glew
+* jpeg
+* freetype
+* openal
+* sndfile
+* autoconf
+
+On Ubuntu, these can be installed with:
+
+`sudo apt-get install libx11-dev libxrandr-dev libgl-dev libudev-dev libglew-dev libjpeg-dev libfreetype6-dev  libopenal-dev libsndfile-dev autoconf`
+
