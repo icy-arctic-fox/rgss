@@ -27,7 +27,7 @@ endif()
 # Location of the Ruby to compiled into the engine.
 set(RUBY_STAGE_DIR "${CMAKE_BINARY_DIR}/ruby-staging")
 set(STAGED_RUBY_INCLUDE_PATH "${RUBY_STAGE_DIR}/include/${RUBY_GIT_TAG}")
-set(STAGED_RUBY_LIBRARY "${RUBY_STAGE_DIR}/lib/${CMAKE_STATIC_LIBRARY_PREFIX}ruby-static.${CMAKE_STATIC_LIBRARY_SUFFIX}"
+set(STAGED_RUBY_LIBRARY "${RUBY_STAGE_DIR}/lib/${CMAKE_STATIC_LIBRARY_PREFIX}ruby-static${CMAKE_STATIC_LIBRARY_SUFFIX}"
         CACHE INTERNAL "Path to static Ruby library"
         )
 set(STAGED_RUBY_INCLUDE_DIR "${STAGED_RUBY_INCLUDE_PATH}" "${STAGED_RUBY_INCLUDE_PATH}/arch"
@@ -54,6 +54,6 @@ ExternalProject_Add(ruby
         INSTALL_COMMAND "${CMAKE_MAKE_PROGRAM}" install
     )
 
-add_library(ruby-static STATIC IMPORTED)
+add_library(ruby-static STATIC IMPORTED GLOBAL)
 add_dependencies(ruby-static ruby)
 set_property(TARGET ruby-static PROPERTY IMPORTED_LOCATION "${STAGED_RUBY_LIBRARY}")
