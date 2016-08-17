@@ -32,7 +32,7 @@ if(WIN32)
     # Window-specifics for compiling Ruby.
 
     # Compile Ruby for 64-bit if we're using 64-bit Visual Studio.
-    if(CMAKE_GENERATOR MATCHES "Win64")
+    if(CMAKE_GENERATOR MATCHES "Win64" OR "$ENV{Platform}" STREQUAL "X64")
         set(RUBY_TARGET x64-mswin64)
     else()
         set(RUBY_TARGET i386-mswin32)
