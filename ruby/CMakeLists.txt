@@ -18,12 +18,6 @@ endif()
 # Annoyingly, Ruby is required to be on the system already to build any Ruby after 1.9.
 find_package(Ruby REQUIRED)
 
-# Autoconf is needed to build Ruby.
-find_program(AUTOCONF_PROGRAM autoconf)
-if(AUTOCONF_PROGRAM STREQUAL "AUTOCONF_PROGRAM-NOTFOUND")
-    message(FATAL_ERROR "autoconf is required to build Ruby")
-endif()
-
 # Location of the Ruby to compiled into the engine.
 set(RUBY_STAGE_DIR "${CMAKE_BINARY_DIR}/ruby-staging")
 set(STAGED_RUBY_INCLUDE_PATH "${RUBY_STAGE_DIR}/include/${RUBY_GIT_TAG}")
@@ -34,24 +28,58 @@ set(STAGED_RUBY_INCLUDE_DIR "${STAGED_RUBY_INCLUDE_PATH}" "${STAGED_RUBY_INCLUDE
         CACHE INTERNAL "Path to staged Ruby header files"
         )
 
-# Various options for configuring Ruby.
-set(CONFIGURE_OPTIONS
-        "--prefix=${RUBY_STAGE_DIR}"
-        --disable-install-doc # Don't install documentation.
-        --disable-install-rdoc
-        --disable-install-capi
-        "--with-rubyhdrdir=${STAGED_RUBY_INCLUDE_PATH}" # Install headers to paths CMake knows.
-        "--with-rubyarchhdrdir=${STAGED_RUBY_INCLUDE_PATH}/arch"
-        )
+if(WIN32)
+    # Window-specifics for compiling Ruby.
+
+    # Compile Ruby for 64-bit if we're using 64-bit Visual Studio.
+    if(CMAKE_GENERATOR MATCHES "Win64")
+        set(RUBY_TARGET x64-mswin64)
+    else()
+        set(RUBY_TARGET i386-mswin32)
+    endif()
+
+    # Various options for configuring Ruby.
+    set(CONFIGURE_SCRIPT "win32/configure.bat")
+    set(CONFIGURE_OPTIONS
+            --target=${RUBY_TARGET}
+            "--prefix=${RUBY_STAGE_DIR}"
+            )
+
+    set(RUBY_CONFIGURE "${CONFIGURE_SCRIPT}" ${CONFIGURE_OPTIONS})
+    set(RUBY_BUILD nmake)
+    set(RUBY_INSTALL nmake install)
+else()
+    # Linux-specifics for compiling Ruby.
+
+    # Autoconf is needed to build Ruby.
+    find_program(AUTOCONF_PROGRAM autoconf)
+    if(AUTOCONF_PROGRAM STREQUAL "AUTOCONF_PROGRAM-NOTFOUND")
+        message(FATAL_ERROR "autoconf is required to build Ruby")
+    endif()
+
+    # Various options for configuring Ruby.
+    set(CONFIGURE_OPTIONS
+            "--prefix=${RUBY_STAGE_DIR}"
+            --disable-install-doc # Don't install documentation.
+            --disable-install-rdoc
+            --disable-install-capi
+            "--with-rubyhdrdir=${STAGED_RUBY_INCLUDE_PATH}" # Install headers to paths CMake knows.
+            "--with-rubyarchhdrdir=${STAGED_RUBY_INCLUDE_PATH}/arch"
+            )
+
+    set(RUBY_CONFIGURE "${AUTOCONF_PROGRAM}" COMMAND ./configure ${CONFIGURE_OPTIONS})
+    set(RUBY_BUILD "${CMAKE_MAKE_PROGRAM}")
+    set(RUBY_INSTALL "${CMAKE_MAKE_PROGRAM}" install)
+endif()
 
 # Add Ruby as an external project.
 ExternalProject_Add(ruby
         GIT_REPOSITORY https://github.com/ruby/ruby.git
         GIT_TAG ${RUBY_GIT_TAG}
-        CONFIGURE_COMMAND "${AUTOCONF_PROGRAM}" COMMAND ./configure ${CONFIGURE_OPTIONS}
-        BUILD_COMMAND "${CMAKE_MAKE_PROGRAM}"
+        CONFIGURE_COMMAND ${RUBY_CONFIGURE}
+        BUILD_COMMAND ${RUBY_BUILD}
         BUILD_IN_SOURCE TRUE
-        INSTALL_COMMAND "${CMAKE_MAKE_PROGRAM}" install
+        INSTALL_COMMAND ${RUBY_INSTALL}
     )
 
 add_library(ruby-static STATIC IMPORTED GLOBAL)
