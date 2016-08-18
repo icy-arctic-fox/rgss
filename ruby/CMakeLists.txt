@@ -62,7 +62,11 @@ if(WIN32)
     # Modification of PATH for Ruby compilation.
     get_filename_component(BISON_BIN_PATH "${BISON_PROGRAM}" DIRECTORY)
     get_filename_component(SED_BIN_PATH "${SED_PROGRAM}" DIRECTORY)
-    set(NEW_PATH_ENV "%PATH%$<SEMICOLON>${BISON_BIN_PATH}$<SEMICOLON>${SED_BIN_PATH}")
+    set(NEW_ENV_PATH $ENV{PATH} "${BISON_BIN_PATH}" "${SED_BIN_PATH}")
+    set(BUILD_RUBY_SCRIPT "${CMAKE_CURRENT_BINARY_DIR}/build-ruby.bat")
+    file(GENERATE OUTPUT "${BUILD_RUBY_SCRIPT}"
+            CONTENT "set PATH=%PATH%;${BISON_BIN_PATH};${SED_BIN_PATH}
+            nmake /nologo %1")
 
     # Various options for configuring Ruby.
     set(CONFIGURE_SCRIPT "win32/configure.bat")
@@ -72,10 +76,8 @@ if(WIN32)
             )
 
     set(RUBY_CONFIGURE "${CONFIGURE_SCRIPT}" ${CONFIGURE_OPTIONS})
-    set(RUBY_BUILD
-            set "PATH=${NEW_PATH_ENV}" # Add bison and sed to path.
-            COMMAND nmake)
-    set(RUBY_INSTALL nmake install)
+    set(RUBY_BUILD "${BUILD_RUBY_SCRIPT}")
+    set(RUBY_INSTALL "${BUILD_RUBY_SCRIPT}" install)
 else()
     # Linux-specifics for compiling Ruby.
 
