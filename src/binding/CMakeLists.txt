@@ -35,7 +35,7 @@ add_library(rgss SHARED ${SRC_FILES})
 
 # Here we use a shared Ruby library from the system to resolve links.
 # But when the game executable is created, the staged Ruby will be linked against.
-if(SHARED_RUBY_BINDING)
+if(SHARED_RUBY_BINDING OR WIN32)
     set(RUBY_LINK_LIBRARY "${RUBY_LIBRARY}")
 endif()
 target_link_libraries(rgss rgss_impl rgss_functions "${RUBY_LINK_LIBRARY}")
