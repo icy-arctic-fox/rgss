@@ -11,8 +11,12 @@ set(USE_LEGACY_RUBY FALSE)
 
 if(USE_LEGACY_RUBY)
     set(RUBY_GIT_TAG ruby_1_9_3)
+    set(STAGED_RUBY_VERSION 1.9.0)
+    set(STAGED_RUBY_VERSION_NODOT 190)
 else()
     set(RUBY_GIT_TAG v2_3_1)
+    set(STAGED_RUBY_VERSION 2.3.0)
+    set(STAGED_RUBY_VERSION_NODOT 230)
 endif()
 
 # Annoyingly, Ruby is required to be on the system already to build any Ruby after 1.9.
@@ -20,13 +24,6 @@ find_package(Ruby REQUIRED)
 
 # Location of the Ruby to compiled into the engine.
 set(RUBY_STAGE_DIR "${CMAKE_BINARY_DIR}/ruby-staging")
-set(STAGED_RUBY_INCLUDE_PATH "${RUBY_STAGE_DIR}/include/${RUBY_GIT_TAG}")
-set(STAGED_RUBY_LIBRARY "${RUBY_STAGE_DIR}/lib/${CMAKE_STATIC_LIBRARY_PREFIX}ruby-static${CMAKE_STATIC_LIBRARY_SUFFIX}"
-        CACHE INTERNAL "Path to static Ruby library"
-        )
-set(STAGED_RUBY_INCLUDE_DIR "${STAGED_RUBY_INCLUDE_PATH}" "${STAGED_RUBY_INCLUDE_PATH}/arch"
-        CACHE INTERNAL "Path to staged Ruby header files"
-        )
 
 if(WIN32)
     # Window-specifics for compiling Ruby.
@@ -78,6 +75,20 @@ if(WIN32)
     set(RUBY_CONFIGURE "${CONFIGURE_SCRIPT}" ${CONFIGURE_OPTIONS})
     set(RUBY_BUILD "${BUILD_RUBY_SCRIPT}")
     set(RUBY_INSTALL "${BUILD_RUBY_SCRIPT}" install)
+
+    # Figure out some things about which names Ruby will use.
+    string(REPLACE . "" VS_VERSION_NODOT "$ENV{VisualStudioVersion}")
+    set(STAGED_RUBY_INCLUDE_PATH "${RUBY_STAGE_DIR}/include/ruby-${STAGED_RUBY_VERSION}")
+    set(RUBY_PLATFORM_INCLUDE ${RUBY_TARGET}_${VS_VERSION_NODOT})
+    set(STAGED_RUBY_INCLUDE_DIR "${STAGED_RUBY_INCLUDE_PATH}" "${STAGED_RUBY_INCLUDE_PATH}/${RUBY_PLATFORM_INCLUDE}"
+            CACHE INTERNAL "Path to staged Ruby header files"
+            )
+    # Since Ruby compiles itself with NMake and Visual Studio, this will always be a LIB.
+    set(STAGED_RUBY_SHARED_LIBRARY msvcr${VS_VERSION_NODOT}-ruby${STAGED_RUBY_VERSION_NODOT}.lib)
+    set(STAGED_RUBY_STATIC_LIBRARY msvcr${VS_VERSION_NODOT}-ruby${STAGED_RUBY_VERSION_NODOT}-static.lib)
+    set(STAGED_RUBY_LIBRARY "${RUBY_STAGE_DIR}/lib/${STAGED_RUBY_STATIC_LIBRARY}"
+            CACHE INTERNAL "Path to static Ruby library"
+            )
 else()
     # Linux-specifics for compiling Ruby.
 
@@ -88,6 +99,7 @@ else()
     endif()
 
     # Various options for configuring Ruby.
+    set(STAGED_RUBY_INCLUDE_PATH "${RUBY_STAGE_DIR}/include/${RUBY_GIT_TAG}")
     set(CONFIGURE_OPTIONS
             "--prefix=${RUBY_STAGE_DIR}"
             --disable-install-doc # Don't install documentation.
@@ -100,6 +112,13 @@ else()
     set(RUBY_CONFIGURE "${AUTOCONF_PROGRAM}" COMMAND ./configure ${CONFIGURE_OPTIONS})
     set(RUBY_BUILD "${CMAKE_MAKE_PROGRAM}")
     set(RUBY_INSTALL "${CMAKE_MAKE_PROGRAM}" install)
+
+    set(STAGED_RUBY_INCLUDE_DIR "${STAGED_RUBY_INCLUDE_PATH}" "${STAGED_RUBY_INCLUDE_PATH}/arch"
+            CACHE INTERNAL "Path to staged Ruby header files"
+            )
+    set(STAGED_RUBY_LIBRARY "${RUBY_STAGE_DIR}/lib/${CMAKE_STATIC_LIBRARY_PREFIX}ruby-static${CMAKE_STATIC_LIBRARY_SUFFIX}"
+            CACHE INTERNAL "Path to static Ruby library"
+            )
 endif()
 
 # Add Ruby as an external project.
