@@ -20,6 +20,9 @@ else()
 endif()
 
 # Annoyingly, Ruby is required to be on the system already to build any Ruby after 1.9.
+# The Ruby library isn't needed, but FindRuby tries anyways.
+# This next line bypasses looking for one since there's problems (especially on Windows) finding it.
+set(RUBY_LIBRARY FAKE CACHE FILEPATH "Trick FindRuby to skip Ruby library issues" FORCE)
 find_package(Ruby REQUIRED)
 
 # Location of the Ruby to compiled into the engine.

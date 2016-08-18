@@ -4,6 +4,11 @@ cmake_minimum_required(VERSION 3.0)
 # However, things are a bit strange here.
 # The gem version of RGSS should link against the current Ruby.
 # The bundled engine should link against the staged Ruby.
+if(NOT SHARED_RUBY_BINDING)
+    # The Ruby library isn't needed, but FindRuby tries anyways.
+    # This next line bypasses looking for one since there's problems (especially on Windows) finding it.
+    set(RUBY_LIBRARY FAKE CACHE FILEPATH "Trick FindRuby to skip Ruby library issues" FORCE)
+endif()
 find_package(Ruby REQUIRED)
 include_directories(${RUBY_INCLUDE_DIRS})
 
