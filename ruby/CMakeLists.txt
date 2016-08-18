@@ -68,8 +68,11 @@ if(WIN32)
     # Various options for configuring Ruby.
     set(CONFIGURE_SCRIPT "win32/configure.bat")
     set(CONFIGURE_OPTIONS
-            --target=${RUBY_TARGET}
             "--prefix=${RUBY_STAGE_DIR}"
+            --target=${RUBY_TARGET}
+            --disable-install-doc # Don't install documentation.
+            --disable-install-rdoc
+            --disable-install-capi
             )
 
     set(RUBY_CONFIGURE "${CONFIGURE_SCRIPT}" ${CONFIGURE_OPTIONS})
