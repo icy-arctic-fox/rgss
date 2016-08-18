@@ -38,6 +38,32 @@ if(WIN32)
         set(RUBY_TARGET i386-mswin32)
     endif()
 
+    # Search for bison and sed in common Ruby installations.
+    file(GLOB_RECURSE BITNAMI_PATHS "$ENV{SystemDrive}/Bitnami/rubystack-*/DevKit/bin/bison.*")
+    file(GLOB_RECURSE RUBY_INST_PATHS "$ENV{SystemDrive}/Ruby*/*/bin/bison.*")
+    foreach(SEARCH_PATH ${BITNAMI_PATHS} ${RUBY_INST_PATHS})
+        get_filename_component(BIN_PATH "${SEARCH_PATH}" DIRECTORY)
+        set(CMAKE_PROGRAM_PATH ${CMAKE_PROGRAM_PATH} "${BIN_PATH}")
+    endforeach(SEARCH_PATH)
+    set(PROGRAM_FILES_X86 "ProgramFiles(x86)") # Work around for CMP0053.
+    # Location where bison and sed setup packages install by default.
+    set(CMAKE_PROGRAM_PATH ${CMAKE_PROGRAM_PATH} "$ENV{${PROGRAM_FILES_X86}}/GnuWin32/bin")
+
+    # Required programs to compile Ruby.
+    find_program(BISON_PROGRAM bison)
+    if(BISON_PROGRAM STREQUAL "BISON_PROGRAM-NOTFOUND")
+        message(FATAL_ERROR "bison is required to build Ruby")
+    endif()
+    find_program(SED_PROGRAM sed)
+    if(SED_PROGRAM STREQUAL "SED_PROGRAM-NOTFOUND")
+        message(FATAL_ERROR "sed is required to build Ruby")
+    endif()
+
+    # Modification of PATH for Ruby compilation.
+    get_filename_component(BISON_BIN_PATH "${BISON_PROGRAM}" DIRECTORY)
+    get_filename_component(SED_BIN_PATH "${SED_PROGRAM}" DIRECTORY)
+    set(NEW_PATH_ENV "%PATH%$<SEMICOLON>${BISON_BIN_PATH}$<SEMICOLON>${SED_BIN_PATH}")
+
     # Various options for configuring Ruby.
     set(CONFIGURE_SCRIPT "win32/configure.bat")
     set(CONFIGURE_OPTIONS
@@ -46,7 +72,9 @@ if(WIN32)
             )
 
     set(RUBY_CONFIGURE "${CONFIGURE_SCRIPT}" ${CONFIGURE_OPTIONS})
-    set(RUBY_BUILD nmake)
+    set(RUBY_BUILD
+            set "PATH=${NEW_PATH_ENV}" # Add bison and sed to path.
+            COMMAND nmake)
     set(RUBY_INSTALL nmake install)
 else()
     # Linux-specifics for compiling Ruby.
