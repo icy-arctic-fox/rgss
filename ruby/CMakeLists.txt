@@ -29,7 +29,13 @@ find_package(Ruby REQUIRED)
 set(RUBY_STAGE_DIR "${CMAKE_BINARY_DIR}/ruby-staging")
 
 if(WIN32)
-    # Window-specifics for compiling Ruby.
+    set(PROGRAM_FILES_X86 "ProgramFiles(x86)") # Work around for CMP0053.
+    # Location where some GNU utilities are installed by default.
+    set(CMAKE_PROGRAM_PATH ${CMAKE_PROGRAM_PATH} "$ENV{${PROGRAM_FILES_X86}}/GnuWin32/bin")
+endif()
+
+if(MSVC)
+    # Windows (Visual Studio) specifics for compiling Ruby.
 
     # Compile Ruby for 64-bit if we're using 64-bit Visual Studio.
     if(CMAKE_GENERATOR MATCHES "Win64" OR "$ENV{Platform}" STREQUAL "X64")
@@ -45,9 +51,6 @@ if(WIN32)
         get_filename_component(BIN_PATH "${SEARCH_PATH}" DIRECTORY)
         set(CMAKE_PROGRAM_PATH ${CMAKE_PROGRAM_PATH} "${BIN_PATH}")
     endforeach(SEARCH_PATH)
-    set(PROGRAM_FILES_X86 "ProgramFiles(x86)") # Work around for CMP0053.
-    # Location where bison and sed setup packages install by default.
-    set(CMAKE_PROGRAM_PATH ${CMAKE_PROGRAM_PATH} "$ENV{${PROGRAM_FILES_X86}}/GnuWin32/bin")
 
     # Required programs to compile Ruby.
     find_program(BISON_PROGRAM bison)
@@ -96,7 +99,7 @@ if(WIN32)
             CACHE INTERNAL "Path to static Ruby library"
             )
 else()
-    # Linux-specifics for compiling Ruby.
+    # Linux (or MinGW) specifics for compiling Ruby.
 
     # Autoconf is needed to build Ruby.
     find_program(AUTOCONF_PROGRAM autoconf)
