@@ -51,11 +51,11 @@ if(WIN32)
 
     # Required programs to compile Ruby.
     find_program(BISON_PROGRAM bison)
-    if(BISON_PROGRAM STREQUAL "BISON_PROGRAM-NOTFOUND")
+    if(NOT BISON_PROGRAM)
         message(FATAL_ERROR "bison is required to build Ruby")
     endif()
     find_program(SED_PROGRAM sed)
-    if(SED_PROGRAM STREQUAL "SED_PROGRAM-NOTFOUND")
+    if(NOT SED_PROGRAM)
         message(FATAL_ERROR "sed is required to build Ruby")
     endif()
 
@@ -81,7 +81,7 @@ else()
 
     # Autoconf is needed to build Ruby.
     find_program(AUTOCONF_PROGRAM autoconf)
-    if(AUTOCONF_PROGRAM STREQUAL "AUTOCONF_PROGRAM-NOTFOUND")
+    if(NOT AUTOCONF_PROGRAM)
         message(FATAL_ERROR "autoconf is required to build Ruby")
     endif()
 
