@@ -124,7 +124,7 @@ else()
             "--with-rubyarchhdrdir=${STAGED_RUBY_INCLUDE_PATH}/arch"
             )
 
-    if(WIN32)
+    if(MINGW)
         # autoconf is shipped as a shell script on Windows.
         find_program(SHELL_PROGRAM sh bash)
         # Need to use a *nix shell to build properly.
