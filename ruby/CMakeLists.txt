@@ -20,10 +20,10 @@ else()
 endif()
 
 # Annoyingly, Ruby is required to be on the system already to build any Ruby after 1.9.
-# The Ruby library isn't needed, but FindRuby tries anyways.
-# This next line bypasses looking for one since there's problems (especially on Windows) finding it.
-set(RUBY_LIBRARY FAKE CACHE FILEPATH "Trick FindRuby to skip Ruby library issues" FORCE)
-find_package(Ruby REQUIRED)
+find_program(RUBY ruby)
+if(NOT RUBY)
+    message(FATAL_ERROR "Existing Ruby installation is required to compile Ruby 1.9+")
+endif()
 
 # Location of the Ruby to compiled into the engine.
 set(RUBY_STAGE_DIR "${CMAKE_BINARY_DIR}/ruby-staging")
@@ -138,8 +138,8 @@ else()
                 ${SHELL_PROGRAM} %*"
                 )
         set(RUBY_CONFIGURE "${BUILD_RUBY_SCRIPT}" "${AUTOCONF_PROGRAM}" COMMAND "${BUILD_RUBY_SCRIPT}" ./configure ${CONFIGURE_OPTIONS})
-        set(RUBY_BUILD "${BUILD_RUBY_SCRIPT}" "${CMAKE_MAKE_PROGRAM}")
-        set(RUBY_INSTALL "${BUILD_RUBY_SCRIPT}" "${CMAKE_MAKE_PROGRAM}" install)
+        set(RUBY_BUILD "${BUILD_RUBY_SCRIPT}" make)
+        set(RUBY_INSTALL "${BUILD_RUBY_SCRIPT}" make install)
     else()
         set(RUBY_CONFIGURE "${AUTOCONF_PROGRAM}" COMMAND ./configure ${CONFIGURE_OPTIONS})
         set(RUBY_BUILD "${CMAKE_MAKE_PROGRAM}")
