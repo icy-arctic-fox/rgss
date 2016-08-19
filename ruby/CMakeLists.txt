@@ -115,13 +115,14 @@ else()
 
     # Various options for configuring Ruby.
     set(STAGED_RUBY_INCLUDE_PATH "${RUBY_STAGE_DIR}/include/${RUBY_GIT_TAG}")
+    set(STAGED_RUBY_ARCH_INCLUDE_PATH "${STAGED_RUBY_INCLUDE_PATH}/arch")
     set(CONFIGURE_OPTIONS
             "--prefix=${RUBY_STAGE_DIR}"
             --disable-install-doc # Don't install documentation.
             --disable-install-rdoc
             --disable-install-capi
             "--with-rubyhdrdir=${STAGED_RUBY_INCLUDE_PATH}" # Install headers to paths CMake knows.
-            "--with-rubyarchhdrdir=${STAGED_RUBY_INCLUDE_PATH}/arch"
+            "--with-rubyarchhdrdir=${STAGED_RUBY_ARCH_INCLUDE_PATH}"
             )
 
     if(MINGW)
@@ -146,7 +147,7 @@ else()
         set(RUBY_INSTALL "${CMAKE_MAKE_PROGRAM}" install)
     endif()
 
-    set(STAGED_RUBY_INCLUDE_DIR "${STAGED_RUBY_INCLUDE_PATH}" "${STAGED_RUBY_INCLUDE_PATH}/arch"
+    set(STAGED_RUBY_INCLUDE_DIR "${STAGED_RUBY_INCLUDE_PATH}" "${STAGED_RUBY_ARCH_INCLUDE_PATH}"
             CACHE INTERNAL "Path to staged Ruby header files"
             )
     set(STAGED_RUBY_LIBRARY "${RUBY_STAGE_DIR}/lib/${CMAKE_STATIC_LIBRARY_PREFIX}ruby-static${CMAKE_STATIC_LIBRARY_SUFFIX}"
@@ -167,3 +168,9 @@ ExternalProject_Add(ruby
 add_library(ruby-static STATIC IMPORTED GLOBAL)
 add_dependencies(ruby-static ruby)
 set_property(TARGET ruby-static PROPERTY IMPORTED_LOCATION "${STAGED_RUBY_LIBRARY}")
+
+# Make staged Ruby available for other components.
+if(NOT SHARED_RUBY_BINDING)
+    set(RUBY_INCLUDE_DIRS ${STAGED_RUBY_INCLUDE_DIR} CACHE INTERNAL "Paths to Ruby include directories")
+    set(RUBY_LIBRARY ${STAGED_RUBY_LIBRARY} CACHE INTERNAL "Ruby libraries to link against")
+endif()
