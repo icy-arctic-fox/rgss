@@ -30,8 +30,33 @@ set(RUBY_STAGE_DIR "${CMAKE_BINARY_DIR}/ruby-staging")
 
 if(WIN32)
     set(PROGRAM_FILES_X86 "ProgramFiles(x86)") # Work around for CMP0053.
-    # Location where some GNU utilities are installed by default.
-    set(CMAKE_PROGRAM_PATH ${CMAKE_PROGRAM_PATH} "$ENV{${PROGRAM_FILES_X86}}/GnuWin32/bin")
+
+    # Location where some utilities are installed by default.
+    set(CMAKE_PROGRAM_PATH ${CMAKE_PROGRAM_PATH}
+            "$ENV{SystemDrive}/MinGW/bin"
+            "$ENV{SystemDrive}/MinGW/msys/1.0/bin"
+            "$ENV{${PROGRAM_FILES_X86}}/GnuWin32/bin"
+            )
+
+    # Search for programs in common Ruby installations.
+    file(GLOB_RECURSE BITNAMI_PATHS "$ENV{SystemDrive}/Bitnami/rubystack-*/DevKit/bin/bison.*")
+    file(GLOB_RECURSE RUBY_INST_PATHS "$ENV{SystemDrive}/Ruby*/*/bin/bison.*")
+    foreach(SEARCH_PATH ${BITNAMI_PATHS} ${RUBY_INST_PATHS})
+        get_filename_component(BIN_PATH "${SEARCH_PATH}" DIRECTORY)
+        set(CMAKE_PROGRAM_PATH ${CMAKE_PROGRAM_PATH} "${BIN_PATH}")
+    endforeach(SEARCH_PATH)
+
+    # Required programs to compile Ruby, not included by default with MinGW or MSYS.
+    find_program(BISON_PROGRAM bison)
+    if(NOT BISON_PROGRAM)
+        message(FATAL_ERROR "bison is required to build Ruby")
+    endif()
+    find_program(SED_PROGRAM sed)
+    if(NOT SED_PROGRAM)
+        message(FATAL_ERROR "sed is required to build Ruby")
+    endif()
+    get_filename_component(BISON_BIN_PATH "${BISON_PROGRAM}" DIRECTORY)
+    get_filename_component(SED_BIN_PATH "${SED_PROGRAM}" DIRECTORY)
 endif()
 
 if(MSVC)
@@ -44,32 +69,13 @@ if(MSVC)
         set(RUBY_TARGET i386-mswin32)
     endif()
 
-    # Search for bison and sed in common Ruby installations.
-    file(GLOB_RECURSE BITNAMI_PATHS "$ENV{SystemDrive}/Bitnami/rubystack-*/DevKit/bin/bison.*")
-    file(GLOB_RECURSE RUBY_INST_PATHS "$ENV{SystemDrive}/Ruby*/*/bin/bison.*")
-    foreach(SEARCH_PATH ${BITNAMI_PATHS} ${RUBY_INST_PATHS})
-        get_filename_component(BIN_PATH "${SEARCH_PATH}" DIRECTORY)
-        set(CMAKE_PROGRAM_PATH ${CMAKE_PROGRAM_PATH} "${BIN_PATH}")
-    endforeach(SEARCH_PATH)
-
-    # Required programs to compile Ruby.
-    find_program(BISON_PROGRAM bison)
-    if(NOT BISON_PROGRAM)
-        message(FATAL_ERROR "bison is required to build Ruby")
-    endif()
-    find_program(SED_PROGRAM sed)
-    if(NOT SED_PROGRAM)
-        message(FATAL_ERROR "sed is required to build Ruby")
-    endif()
-
     # Modification of PATH for Ruby compilation.
-    get_filename_component(BISON_BIN_PATH "${BISON_PROGRAM}" DIRECTORY)
-    get_filename_component(SED_BIN_PATH "${SED_PROGRAM}" DIRECTORY)
     set(NEW_ENV_PATH $ENV{PATH} "${BISON_BIN_PATH}" "${SED_BIN_PATH}")
     set(BUILD_RUBY_SCRIPT "${CMAKE_CURRENT_BINARY_DIR}/build-ruby.bat")
     file(GENERATE OUTPUT "${BUILD_RUBY_SCRIPT}"
             CONTENT "set PATH=%PATH%;${BISON_BIN_PATH};${SED_BIN_PATH}
-            nmake /nologo %1")
+            nmake /nologo %1"
+            )
 
     # Various options for configuring Ruby.
     set(CONFIGURE_SCRIPT "win32/configure.bat")
@@ -118,9 +124,27 @@ else()
             "--with-rubyarchhdrdir=${STAGED_RUBY_INCLUDE_PATH}/arch"
             )
 
-    set(RUBY_CONFIGURE "${AUTOCONF_PROGRAM}" COMMAND ./configure ${CONFIGURE_OPTIONS})
-    set(RUBY_BUILD "${CMAKE_MAKE_PROGRAM}")
-    set(RUBY_INSTALL "${CMAKE_MAKE_PROGRAM}" install)
+    if(WIN32)
+        # autoconf is shipped as a shell script on Windows.
+        find_program(SHELL_PROGRAM sh bash)
+        # Need to use a *nix shell to build properly.
+        if(NOT SHELL_PROGRAM)
+            message(FATAL_ERROR "A Linux-based shell is required for autoconf")
+        endif()
+        get_filename_component(SHELL_PATH "${SHELL_PROGRAM}" DIRECTORY)
+        set(BUILD_RUBY_SCRIPT "${CMAKE_CURRENT_BINARY_DIR}/build-ruby-env.bat")
+        file(GENERATE OUTPUT "${BUILD_RUBY_SCRIPT}"
+                CONTENT "set PATH=${SHELL_PATH};%PATH%;${BISON_BIN_PATH};${SED_BIN_PATH}
+                ${SHELL_PROGRAM} %*"
+                )
+        set(RUBY_CONFIGURE "${BUILD_RUBY_SCRIPT}" "${AUTOCONF_PROGRAM}" COMMAND "${BUILD_RUBY_SCRIPT}" ./configure ${CONFIGURE_OPTIONS})
+        set(RUBY_BUILD "${BUILD_RUBY_SCRIPT}" "${CMAKE_MAKE_PROGRAM}")
+        set(RUBY_INSTALL "${BUILD_RUBY_SCRIPT}" "${CMAKE_MAKE_PROGRAM}" install)
+    else()
+        set(RUBY_CONFIGURE "${AUTOCONF_PROGRAM}" COMMAND ./configure ${CONFIGURE_OPTIONS})
+        set(RUBY_BUILD "${CMAKE_MAKE_PROGRAM}")
+        set(RUBY_INSTALL "${CMAKE_MAKE_PROGRAM}" install)
+    endif()
 
     set(STAGED_RUBY_INCLUDE_DIR "${STAGED_RUBY_INCLUDE_PATH}" "${STAGED_RUBY_INCLUDE_PATH}/arch"
             CACHE INTERNAL "Path to staged Ruby header files"
