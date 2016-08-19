@@ -3,12 +3,9 @@
 #ifndef COMMON_H
 #define	COMMON_H
 
-#ifdef __cplusplus
-extern "C" {
-#endif
 #include <ruby.h>
+
 #ifdef __cplusplus
-}
 
 // Required cast to use function references with Ruby in C++.
 #define RB_FUNC(FUNCTION) reinterpret_cast<VALUE(*)(...)>(FUNCTION)
