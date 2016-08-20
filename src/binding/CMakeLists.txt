@@ -51,6 +51,16 @@ elseif(MSVC)
     target_link_libraries(rgss ruby-dynamic)
 endif()
 
+# Header for exporting symbols from DLLs.
+include(GenerateExportHeader)
+generate_export_header(rgss
+        BASE_NAME rgss
+        EXPORT_MACRO_NAME RGSS_EXPORT
+        EXPORT_FILE_NAME rgss_export.h
+        STATIC_DEFINE RGSS_STATIC
+        )
+include_directories("${CMAKE_CURRENT_BINARY_DIR}")
+
 install(TARGETS rgss DESTINATION .)
 
 # Custom "install" target for just building and installing the native extension.
