@@ -1,11 +1,11 @@
 #ifndef RGSS_BINDING_H
 #define RGSS_BINDING_H
 
+#include <ruby.h>
+
 #ifdef __cplusplus
 extern "C" {
 #endif
-
-#include <ruby.h>
 
 void Init_rgss ();
 
