@@ -57,6 +57,11 @@ function(LINK_SFML TARGET)
         set(SUFFIX ${CMAKE_SHARED_LIBRARY_SUFFIX})
     endif()
 
+    # The SFML build adds "-d" for debug libraries.
+    if(CMAKE_BUILD_TYPE MATCHES "Debug")
+        set(MODULE_SUFFIX ${MODULE_SUFFIX}-d)
+    endif()
+
     foreach(MODULE IN ITEMS audio graphics network window system)
         set(MODULE_FULL_PATH "${SFML_LIB_DIR}/${PREFIX}sfml-${MODULE}${MODULE_SUFFIX}${SUFFIX}")
         target_link_libraries(${TARGET} "${MODULE_FULL_PATH}")
