@@ -99,10 +99,16 @@ if(MSVC)
             CACHE INTERNAL "Path to staged Ruby header files"
             )
     # Since Ruby compiles itself with NMake and Visual Studio, this will always be a LIB.
-    set(STAGED_RUBY_SHARED_LIBRARY msvcr${VS_VERSION_NODOT}-ruby${STAGED_RUBY_VERSION_NODOT}.lib)
-    set(STAGED_RUBY_STATIC_LIBRARY msvcr${VS_VERSION_NODOT}-ruby${STAGED_RUBY_VERSION_NODOT}-static.lib)
+    set(STAGED_RUBY_SHARED_LIBRARY msvcr${VS_VERSION_NODOT}-ruby${STAGED_RUBY_VERSION_NODOT})
+    set(STAGED_RUBY_STATIC_LIBRARY ${STAGED_RUBY_SHARED_LIBRARY}-static)
     set(STAGED_RUBY_LIBRARY "${RUBY_STAGE_DIR}/lib/${STAGED_RUBY_STATIC_LIBRARY}"
             CACHE INTERNAL "Path to static Ruby library"
+            )
+    set(STAGED_RUBY_SHARED_LIBRARY_FULL "${RUBY_STAGE_DIR}/bin/${CMAKE_SHARED_LIBRARY_PREFIX}${STAGED_RUBY_SHARED_LIBRARY}${CMAKE_SHARED_LIBRARY_SUFFIX}")
+    set(STAGED_RUBY_STATIC_LIBRARY_FULL "${RUBY_STAGE_DIR}/lib/${CMAKE_STATIC_LIBRARY_PREFIX}${STAGED_RUBY_SHARED_LIBRARY}${CMAKE_STATIC_LIBRARY_SUFFIX}")
+    set(STAGED_DYNAMIC_RUBY_LIBRARY
+            "${STAGED_RUBY_STATIC_LIBRARY_FULL}" "${STAGED_RUBY_SHARED_LIBRARY_FULL}"
+            CACHE INTERNAL "Path to Ruby library needed for dynamic linking"
             )
 else()
     # Linux (or MinGW) specifics for compiling Ruby.
@@ -150,8 +156,13 @@ else()
     set(STAGED_RUBY_INCLUDE_DIR "${STAGED_RUBY_INCLUDE_PATH}" "${STAGED_RUBY_ARCH_INCLUDE_PATH}"
             CACHE INTERNAL "Path to staged Ruby header files"
             )
-    set(STAGED_RUBY_LIBRARY "${RUBY_STAGE_DIR}/lib/${CMAKE_STATIC_LIBRARY_PREFIX}ruby-static${CMAKE_STATIC_LIBRARY_SUFFIX}"
+    set(STAGED_RUBY_SHARED_LIBRARY_FULL "${RUBY_STAGE_DIR}/lib/${CMAKE_SHARED_LIBRARY_PREFIX}ruby${CMAKE_SHARED_LIBRARY_SUFFIX}")
+    set(STAGED_RUBY_STATIC_LIBRARY_FULL "${RUBY_STAGE_DIR}/lib/${CMAKE_STATIC_LIBRARY_PREFIX}ruby-static${CMAKE_STATIC_LIBRARY_SUFFIX}")
+    set(STAGED_RUBY_LIBRARY "${STAGED_RUBY_STATIC_LIBRARY_FULL}"
             CACHE INTERNAL "Path to static Ruby library"
+            )
+    set(STAGED_DYNAMIC_RUBY_LIBRARY "${STAGED_RUBY_SHARED_LIBRARY_FULL}"
+            CACHE INTERNAL "Path to shared Ruby library"
             )
 endif()
 
@@ -165,9 +176,14 @@ ExternalProject_Add(ruby
         INSTALL_COMMAND ${RUBY_INSTALL}
     )
 
+# Expose staged Ruby libraries.
 add_library(ruby-static STATIC IMPORTED GLOBAL)
 add_dependencies(ruby-static ruby)
 set_property(TARGET ruby-static PROPERTY IMPORTED_LOCATION "${STAGED_RUBY_LIBRARY}")
+add_library(ruby-dynamic SHARED IMPORTED GLOBAL)
+add_dependencies(ruby-dynamic ruby)
+set_property(TARGET ruby-dynamic PROPERTY IMPORTED_LOCATION "${STAGED_RUBY_SHARED_LIBRARY_FULL}")
+set_property(TARGET ruby-dynamic PROPERTY IMPORTED_IMPLIB   "${STAGED_RUBY_STATIC_LIBRARY_FULL}")
 
 # Make staged Ruby available for other components.
 if(NOT SHARED_RUBY_BINDING)
