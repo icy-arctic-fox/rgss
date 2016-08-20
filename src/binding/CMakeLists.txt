@@ -52,6 +52,8 @@ target_link_libraries(rgss rgss_impl rgss_functions)
 # But when the game executable is created, the staged Ruby will be linked against.
 if(SHARED_RUBY_BINDING)
     target_link_libraries(rgss ${RUBY_LIBRARY})
+elseif(MSVC)
+    target_link_libraries(rgss ruby-dynamic)
 endif()
 
 install(TARGETS rgss DESTINATION .)
