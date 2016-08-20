@@ -10,7 +10,9 @@ set(SFML_REPO https://github.com/SFML/SFML.git) # URL to the SFML repository.
 
 set(SFML_EXT_DIR     "${CMAKE_CURRENT_BINARY_DIR}${CMAKE_FILES_DIRECTORY}/sfml") # Directory to checkout SFML to.
 set(SFML_INSTALL_DIR "${CMAKE_CURRENT_BINARY_DIR}/sfml") # Directory to install SFML in.
-set(SFML_CMAKE_ARGS  "-DCMAKE_INSTALL_PREFIX=${SFML_INSTALL_DIR}") # Tell SFML's CMake where to install.
+set(SFML_CMAKE_ARGS  "-DCMAKE_INSTALL_PREFIX=${SFML_INSTALL_DIR}" # Tell SFML's CMake where to install.
+        "-DCMAKE_BUILD_TYPE=${CMAKE_BUILD_TYPE}" # Pass on the build type.
+        )
 
 if(STATIC_SFML_LIB)
     # Compile SFML for static linking.
