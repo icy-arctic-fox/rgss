@@ -19,8 +19,11 @@ include_directories(../../include/binding)
 add_executable(Game ${SRC_FILES})
 target_link_libraries(Game rgss rgss_rpg ruby-static)
 
+# Linkages needed for Ruby.
 if(UNIX)
     target_link_libraries(Game pthread gmp dl crypt)
+elseif(MSVC)
+    target_link_libraries(Game iphlpapi dbghelp shlwapi)
 endif()
 
 # Look for shared libraries in current directory.
