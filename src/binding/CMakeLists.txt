@@ -4,12 +4,7 @@ cmake_minimum_required(VERSION 3.0)
 # However, things are a bit strange here.
 # The gem version of RGSS should link against the current Ruby.
 # The bundled engine should link against the staged Ruby.
-if(NOT SHARED_RUBY_BINDING)
-    find_program(RUBY ruby)
-    if(NOT RUBY)
-        message(FATAL_ERROR "Existing Ruby installation is required to compile Ruby 1.9+")
-    endif()
-else()
+if(SHARED_RUBY_BINDING)
     find_package(Ruby REQUIRED)
 endif()
 include_directories(${RUBY_INCLUDE_DIRS})
