@@ -1,9 +1,11 @@
 #include "common.h"
 
+extern "C" {
 // Ruby script containing the remaining functions.
 // The other functions are implemented in Ruby because it's much simpler to do so.
 // This string is generated from functions.rb.
 extern const char functions_rb[];
+}
 
 // Can't seem to find an easy way to communicate between function_rgss_main, function_rgss_main_cb, and function_rgss_main_rescue.
 // So, this global is set to true when RGSSReset is raised in rgss_main.
