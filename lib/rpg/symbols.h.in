@@ -4,6 +4,8 @@
 #ifndef RPG_SYMBOLS_H
 #define RPG_SYMBOLS_H
 
+extern "C" {
+
 @EXTERNS@
 
 const char *rpg_scripts[] = {
@@ -11,5 +13,7 @@ const char *rpg_scripts[] = {
 };
 
 const int rpg_script_count = sizeof(rpg_scripts) / sizeof(const char *);
+
+} // extern "C"
 
 #endif // RPG_SYMBOLS_H
