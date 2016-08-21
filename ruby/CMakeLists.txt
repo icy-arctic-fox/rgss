@@ -187,9 +187,3 @@ set_property(TARGET ruby-dynamic PROPERTY IMPORTED_LOCATION "${STAGED_RUBY_SHARE
 if(STAGED_RUBY_IMP_LIBRARY_FULL)
     set_property(TARGET ruby-dynamic PROPERTY IMPORTED_IMPLIB "${STAGED_RUBY_IMP_LIBRARY_FULL}")
 endif()
-
-# Make staged Ruby available for other components.
-if(NOT SHARED_RUBY_BINDING)
-    set(RUBY_INCLUDE_DIRS ${STAGED_RUBY_INCLUDE_DIR} CACHE INTERNAL "Paths to Ruby include directories")
-    set(RUBY_LIBRARY ${STAGED_RUBY_LIBRARY} CACHE INTERNAL "Ruby libraries to link against")
-endif()
