@@ -76,7 +76,7 @@ int main (int argc, char** argv)
     int state;
     if(!(state = initIniFile()))
     {
-        Init_rgss();
+        startRGSS();
         if (!(state = initRPGScripts()))
             state = bootstrap();
     }
